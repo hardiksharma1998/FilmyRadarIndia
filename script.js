@@ -24,7 +24,6 @@ const clearSearch = document.getElementById("clearSearch");
 
 const toast = document.getElementById("toast");
 
-
 /* =========================
    TOAST
 ========================= */
@@ -42,37 +41,52 @@ function showToast(message) {
   }, 2500);
 }
 
-
 /* =========================
    API
 ========================= */
 
 async function getData(action, query = "") {
+  const url =
+    `${API}?action=${encodeURIComponent(action)}` +
+    (query
+      ? `&query=${encodeURIComponent(query)}`
+      : "");
+
   try {
-    let url = `${API}?action=${encodeURIComponent(action)}`;
-
-    if (query) {
-      url += `&query=${encodeURIComponent(query)}`;
-    }
-
     const response = await fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json"
-      }
+      },
+      cache: "no-store"
     });
 
-    const data = await response.json();
+    const text = await response.text();
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        `Invalid JSON response from ${action}`
+      );
+    }
 
     if (!response.ok) {
-      console.error("API Error:", data);
-      throw new Error(data.error || `API Error ${response.status}`);
+      throw new Error(
+        data.error ||
+        `API request failed: ${response.status}`
+      );
     }
 
     return data;
 
   } catch (error) {
-    console.error(`TMDB ${action} error:`, error);
+    console.error(
+      `TMDB ${action} error:`,
+      error
+    );
 
     return {
       results: [],
@@ -81,10 +95,47 @@ async function getData(action, query = "") {
   }
 }
 
-
 /* =========================
    HELPERS
 ========================= */
+
+function titleOf(item) {
+  return (
+    item?.title ||
+    item?.name ||
+    item?.original_title ||
+    item?.original_name ||
+    "Untitled"
+  );
+}
+
+function dateOf(item) {
+  return (
+    item?.release_date ||
+    item?.first_air_date ||
+    ""
+  );
+}
+
+function rating(value) {
+  const number = Number(value);
+
+  if (!Number.isFinite(number) || number <= 0) {
+    return "—";
+  }
+
+  return number.toFixed(1);
+}
+
+function typeOf(item) {
+  return (
+    item?.media_type === "tv" ||
+    item?.first_air_date ||
+    item?.name
+  )
+    ? "Series"
+    : "Movie";
+}
 
 function imageUrl(path, size = "w500") {
   if (!path) {
@@ -93,7 +144,6 @@ function imageUrl(path, size = "w500") {
 
   return `https://image.tmdb.org/t/p/${size}${path}`;
 }
-
 
 function escapeHTML(value = "") {
   return String(value)
@@ -104,70 +154,32 @@ function escapeHTML(value = "") {
     .replaceAll("'", "&#039;");
 }
 
-
-function titleOf(item) {
-  return (
-    item.title ||
-    item.name ||
-    item.original_title ||
-    item.original_name ||
-    "Untitled"
-  );
-}
-
-
-function dateOf(item) {
-  return item.release_date || item.first_air_date || "";
-}
-
-
 function formatDate(date) {
   if (!date) {
     return "Release date unavailable";
   }
 
-  const d = new Date(date);
+  const parsed = new Date(date);
 
-  if (Number.isNaN(d.getTime())) {
+  if (Number.isNaN(parsed.getTime())) {
     return date;
   }
 
-  return d.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  });
-}
-
-
-function rating(value) {
-  if (!value || Number(value) === 0) {
-    return "—";
-  }
-
-  return Number(value).toFixed(1);
-}
-
-
-function isTV(item) {
-  return (
-    item.media_type === "tv" ||
-    Boolean(item.first_air_date) ||
-    Boolean(item.name)
+  return parsed.toLocaleDateString(
+    "en-IN",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    }
   );
 }
-
-
-function typeOf(item) {
-  return isTV(item) ? "Series" : "Movie";
-}
-
 
 /* =========================
    LOADING
 ========================= */
 
-function loadingHTML(text) {
+function loadingHTML(message) {
   return `
     <div style="
       grid-column:1/-1;
@@ -176,11 +188,10 @@ function loadingHTML(text) {
       color:#91a1b8;
       font-size:13px;
     ">
-      ${escapeHTML(text)}
+      ${escapeHTML(message)}
     </div>
   `;
 }
-
 
 /* =========================
    MOVIE CARD
@@ -189,11 +200,14 @@ function loadingHTML(text) {
 function movieCard(item, badge = "") {
   const title = titleOf(item);
   const date = dateOf(item);
-  const score = rating(item.vote_average);
-  const poster = imageUrl(item.poster_path);
+  const score = rating(item?.vote_average);
+  const poster = imageUrl(
+    item?.poster_path,
+    "w500"
+  );
 
-  const safeTitle = escapeHTML(title);
-  const safeDate = escapeHTML(date);
+  const safeTitle =
+    escapeHTML(title);
 
   return `
     <article
@@ -205,12 +219,12 @@ function movieCard(item, badge = "") {
         class="poster real-poster"
         style="
           background-image:
-          linear-gradient(
-            180deg,
-            rgba(0,0,0,0.02) 20%,
-            rgba(0,0,0,0.88) 100%
-          ),
-          url('${poster}');
+            linear-gradient(
+              180deg,
+              rgba(0,0,0,.02) 15%,
+              rgba(0,0,0,.88) 100%
+            ),
+            url('${poster}');
           background-size:cover;
           background-position:center;
         "
@@ -218,12 +232,20 @@ function movieCard(item, badge = "") {
 
         ${
           badge
-            ? `<span class="badge">${escapeHTML(badge)}</span>`
+            ? `
+              <span class="badge">
+                ${escapeHTML(badge)}
+              </span>
+            `
             : ""
         }
 
         <span class="rating">
-          ${score !== "—" ? `⭐ ${score}` : "N/A"}
+          ${
+            score !== "—"
+              ? `⭐ ${score}`
+              : "N/A"
+          }
         </span>
 
         <span class="poster-title">
@@ -234,13 +256,15 @@ function movieCard(item, badge = "") {
 
       <div class="card-meta">
 
-        <h3>${safeTitle}</h3>
+        <h3>
+          ${safeTitle}
+        </h3>
 
         <p>
           ${
-            safeDate
+            date
               ? formatDate(date)
-              : "Coming Soon"
+              : "Release date unavailable"
           }
 
           ·
@@ -260,16 +284,28 @@ function movieCard(item, badge = "") {
   `;
 }
 
-
 /* =========================
    RENDER GRID
 ========================= */
 
-function renderGrid(element, results, badge = "") {
+function renderGrid(
+  element,
+  results,
+  badge = ""
+) {
   if (!element) return;
 
-  if (!Array.isArray(results) || results.length === 0) {
+  const list = Array.isArray(results)
+    ? results
+        .filter(
+          item =>
+            item &&
+            item.poster_path
+        )
+        .slice(0, 8)
+    : [];
 
+  if (!list.length) {
     element.innerHTML = `
       <div style="
         grid-column:1/-1;
@@ -284,31 +320,12 @@ function renderGrid(element, results, badge = "") {
     return;
   }
 
-  const validResults = results
-    .filter(item => item && item.poster_path)
-    .slice(0, 8);
-
-  if (validResults.length === 0) {
-
-    element.innerHTML = `
-      <div style="
-        grid-column:1/-1;
-        padding:35px 20px;
-        text-align:center;
-        color:#91a1b8;
-      ">
-        No posters available right now.
-      </div>
-    `;
-
-    return;
-  }
-
-  element.innerHTML = validResults
-    .map(item => movieCard(item, badge))
+  element.innerHTML = list
+    .map(item =>
+      movieCard(item, badge)
+    )
     .join("");
 }
-
 
 /* =========================
    TRENDING
@@ -317,11 +334,17 @@ function renderGrid(element, results, badge = "") {
 function renderTrending(results) {
   if (!trendingList) return;
 
-  const items = (results || [])
-    .filter(item => item && item.poster_path)
-    .slice(0, 5);
+  const list = Array.isArray(results)
+    ? results
+        .filter(
+          item =>
+            item &&
+            item.poster_path
+        )
+        .slice(0, 5)
+    : [];
 
-  if (!items.length) {
+  if (!list.length) {
     trendingList.innerHTML = `
       <div style="
         padding:20px 0;
@@ -335,10 +358,20 @@ function renderTrending(results) {
     return;
   }
 
-  trendingList.innerHTML = items
+  trendingList.innerHTML = list
     .map((item, index) => {
 
-      const title = titleOf(item);
+      const title =
+        escapeHTML(titleOf(item));
+
+      const poster =
+        imageUrl(
+          item.poster_path,
+          "w185"
+        );
+
+      const score =
+        rating(item.vote_average);
 
       return `
         <div class="trend">
@@ -351,11 +384,11 @@ function renderTrending(results) {
             class="mini-poster"
             style="
               background-image:
-              linear-gradient(
-                rgba(0,0,0,.15),
-                rgba(0,0,0,.3)
-              ),
-              url('${imageUrl(item.poster_path, "w185")}');
+                linear-gradient(
+                  rgba(0,0,0,.1),
+                  rgba(0,0,0,.35)
+                ),
+                url('${poster}');
               background-size:cover;
               background-position:center;
             "
@@ -364,13 +397,17 @@ function renderTrending(results) {
           <span>
 
             <b>
-              ${escapeHTML(title)}
+              ${title}
             </b>
 
             <small>
               ${typeOf(item)}
               ·
-              ⭐ ${rating(item.vote_average)}
+              ${
+                score !== "—"
+                  ? `⭐ ${score}`
+                  : "N/A"
+              }
             </small>
 
           </span>
@@ -380,7 +417,6 @@ function renderTrending(results) {
     })
     .join("");
 }
-
 
 /* =========================
    NEWS
@@ -408,14 +444,13 @@ function renderNews() {
         </h3>
 
         <p>
-          FilmyRadarIndia automatically updates
-          movie and TV information from TMDB.
+          Movie and TV information is
+          automatically updated from TMDB.
         </p>
 
       </div>
 
     </article>
-
 
     <article class="news-item">
 
@@ -434,14 +469,13 @@ function renderNews() {
         </h3>
 
         <p>
-          Explore popular titles and discover
-          what's trending right now.
+          Explore popular titles and
+          discover what's trending right now.
         </p>
 
       </div>
 
     </article>
-
 
     <article class="news-item">
 
@@ -460,8 +494,8 @@ function renderNews() {
         </h3>
 
         <p>
-          Trending movies and series are refreshed
-          automatically from TMDB.
+          Trending movies and series are
+          refreshed automatically.
         </p>
 
       </div>
@@ -471,7 +505,6 @@ function renderNews() {
   `;
 }
 
-
 /* =========================
    HERO
 ========================= */
@@ -480,79 +513,99 @@ function updateHero(item) {
   if (!item) return;
 
   const heroTitle =
-    document.querySelector(".hero h1");
+    document.querySelector(
+      ".hero h1"
+    );
 
   const heroSubtitle =
-    document.querySelector(".hero h2");
+    document.querySelector(
+      ".hero h2"
+    );
 
   const heroText =
-    document.querySelector(".hero p");
+    document.querySelector(
+      ".hero p"
+    );
 
   const heroPoster =
-    document.querySelector(".hero-poster");
+    document.querySelector(
+      ".hero-poster"
+    );
 
   const heroPill =
-    document.querySelector(".hero .pill");
+    document.querySelector(
+      ".hero .pill"
+    );
 
-  const title = titleOf(item);
+  const title =
+    titleOf(item);
 
+  const overview =
+    item.overview || "";
 
   /* TITLE */
 
   if (heroTitle) {
-    heroTitle.innerHTML =
-      escapeHTML(title);
+    heroTitle.textContent =
+      title;
   }
-
 
   /* SUBTITLE */
 
   if (heroSubtitle) {
 
-    const overview =
-      item.overview || "";
-
     heroSubtitle.textContent =
       overview
-        ? overview.length > 110
-          ? overview.substring(0, 110) + "..."
+        ? overview.length > 100
+          ? overview.substring(
+              0,
+              100
+            ) + "..."
           : overview
         : "Trending right now on FilmyRadarIndia";
   }
-
 
   /* DESCRIPTION */
 
   if (heroText) {
 
     heroText.textContent =
-      item.overview ||
+      overview ||
       "Discover the latest movies, OTT releases, web series, reviews and entertainment updates.";
   }
-
 
   /* BADGE */
 
   if (heroPill) {
+
     heroPill.textContent =
-      isTV(item)
+      typeOf(item) === "Series"
         ? "🔥 TRENDING SERIES"
         : "🔥 TRENDING MOVIE";
   }
 
-
   /* HERO POSTER */
 
-  if (heroPoster && item.poster_path) {
+  if (
+    heroPoster &&
+    item.poster_path
+  ) {
 
-    heroPoster.style.backgroundImage = `
-      linear-gradient(
-        180deg,
-        transparent 20%,
-        rgba(0,0,0,.92) 100%
-      ),
-      url('${imageUrl(item.poster_path, "w500")}')
-    `;
+    const poster =
+      imageUrl(
+        item.poster_path,
+        "w500"
+      );
+
+    heroPoster.style.backgroundImage =
+      `
+        linear-gradient(
+          180deg,
+          transparent 20%,
+          rgba(0,0,0,.92) 100%
+        ),
+        url('${poster}')
+      `;
 
     heroPoster.style.backgroundSize =
       "cover";
@@ -561,7 +614,6 @@ function updateHero(item) {
       "center";
 
     heroPoster.style.padding = "0";
-
 
     heroPoster.innerHTML = `
 
@@ -580,7 +632,11 @@ function updateHero(item) {
           color:#ffc52e;
           margin-bottom:5px;
         ">
-          ${isTV(item) ? "SERIES" : "MOVIE"}
+          ${
+            typeOf(item) === "Series"
+              ? "SERIES"
+              : "MOVIE"
+          }
         </div>
 
         <strong style="
@@ -606,6 +662,32 @@ function updateHero(item) {
   }
 }
 
+/* =========================
+   LOAD ONE SECTION
+========================= */
+
+async function loadSection(
+  action,
+  element,
+  badge,
+  loadingText
+) {
+  if (!element) return;
+
+  element.innerHTML =
+    loadingHTML(loadingText);
+
+  const data =
+    await getData(action);
+
+  renderGrid(
+    element,
+    data.results || [],
+    badge
+  );
+
+  return data;
+}
 
 /* =========================
    LOAD HOMEPAGE
@@ -613,31 +695,56 @@ function updateHero(item) {
 
 async function loadHomepage() {
 
+  console.log(
+    "FilmyRadarIndia: loading homepage..."
+  );
+
+  /* Loading states */
+
   if (movieGrid) {
     movieGrid.innerHTML =
-      loadingHTML("Loading latest movies...");
+      loadingHTML(
+        "Loading latest movies..."
+      );
   }
 
   if (ottGrid) {
     ottGrid.innerHTML =
-      loadingHTML("Loading OTT titles...");
+      loadingHTML(
+        "Loading OTT titles..."
+      );
   }
 
   if (seriesGrid) {
     seriesGrid.innerHTML =
-      loadingHTML("Loading web series...");
+      loadingHTML(
+        "Loading web series..."
+      );
   }
 
   if (upcomingGrid) {
     upcomingGrid.innerHTML =
-      loadingHTML("Loading upcoming releases...");
+      loadingHTML(
+        "Loading upcoming releases..."
+      );
   }
 
+  if (trendingList) {
+    trendingList.innerHTML = `
+      <div style="
+        padding:20px 0;
+        color:#91a1b8;
+        font-size:12px;
+      ">
+        Loading trending...
+      </div>
+    `;
+  }
 
   /*
-    API requests separately.
-    If one fails, other sections
-    will still load.
+    Load independently.
+    One failed request won't
+    stop the others.
   */
 
   const trendingPromise =
@@ -655,7 +762,6 @@ async function loadHomepage() {
   const upcomingPromise =
     getData("upcoming");
 
-
   const [
     trending,
     movies,
@@ -670,6 +776,25 @@ async function loadHomepage() {
     upcomingPromise
   ]);
 
+  console.log(
+    "FilmyRadarIndia API:",
+    {
+      trending:
+        trending.results?.length || 0,
+
+      movies:
+        movies.results?.length || 0,
+
+      ott:
+        ott.results?.length || 0,
+
+      series:
+        series.results?.length || 0,
+
+      upcoming:
+        upcoming.results?.length || 0
+    }
+  );
 
   /* MOVIES */
 
@@ -679,7 +804,6 @@ async function loadHomepage() {
     "MOVIE"
   );
 
-
   /* OTT */
 
   renderGrid(
@@ -687,7 +811,6 @@ async function loadHomepage() {
     ott.results || [],
     "OTT"
   );
-
 
   /* SERIES */
 
@@ -697,7 +820,6 @@ async function loadHomepage() {
     "SERIES"
   );
 
-
   /* UPCOMING */
 
   renderGrid(
@@ -706,39 +828,38 @@ async function loadHomepage() {
     "UPCOMING"
   );
 
-
   /* TRENDING */
 
   renderTrending(
     trending.results || []
   );
 
-
   /* NEWS */
 
   renderNews();
-
 
   /* HERO */
 
   const heroItem =
     (trending.results || [])
-      .find(item => item.poster_path);
+      .find(
+        item =>
+          item &&
+          item.poster_path
+      );
 
-  updateHero(heroItem);
+  if (heroItem) {
+    updateHero(heroItem);
+  }
 
-
-  /*
-    If every API request failed,
-    show a useful message.
-  */
+  /* ERROR NOTICE */
 
   const allEmpty =
     !(movies.results || []).length &&
     !(ott.results || []).length &&
     !(series.results || []).length &&
-    !(upcoming.results || []).length;
-
+    !(upcoming.results || []).length &&
+    !(trending.results || []).length;
 
   if (allEmpty) {
 
@@ -746,10 +867,14 @@ async function loadHomepage() {
       "Movie data could not be loaded. Please refresh."
     );
 
+  } else {
+
+    console.log(
+      "FilmyRadarIndia: homepage loaded successfully."
+    );
+
   }
-
 }
-
 
 /* =========================
    SEARCH
@@ -765,16 +890,12 @@ async function performSearch(query) {
     return;
   }
 
-
   if (movieGrid) {
-
     movieGrid.innerHTML =
       loadingHTML(
         `Searching for "${cleanQuery}"...`
       );
-
   }
-
 
   const data =
     await getData(
@@ -782,17 +903,20 @@ async function performSearch(query) {
       cleanQuery
     );
 
-
   const results =
     (data.results || [])
-      .filter(item =>
-        item.media_type === "movie" ||
-        item.media_type === "tv"
+      .filter(
+        item =>
+          item &&
+          (
+            item.media_type === "movie" ||
+            item.media_type === "tv"
+          )
       )
-      .filter(item =>
-        item.poster_path
+      .filter(
+        item =>
+          item.poster_path
       );
-
 
   renderGrid(
     movieGrid,
@@ -800,10 +924,10 @@ async function performSearch(query) {
     "SEARCH"
   );
 
-
   const moviesSection =
-    document.querySelector("#movies");
-
+    document.querySelector(
+      "#movies"
+    );
 
   if (moviesSection) {
 
@@ -814,7 +938,6 @@ async function performSearch(query) {
 
   }
 
-
   if (!results.length) {
 
     showToast(
@@ -822,9 +945,7 @@ async function performSearch(query) {
     );
 
   }
-
 }
-
 
 /* =========================
    SEARCH INPUT
@@ -843,24 +964,21 @@ if (searchInput) {
         window.searchTimer
       );
 
-
       if (query.length < 2) {
         return;
       }
 
-
       window.searchTimer =
-        setTimeout(() => {
-
-          performSearch(query);
-
-        }, 500);
+        setTimeout(
+          () => {
+            performSearch(query);
+          },
+          500
+        );
 
     }
   );
-
 }
-
 
 /* =========================
    CLEAR SEARCH
@@ -868,16 +986,19 @@ if (searchInput) {
 
 if (clearSearch) {
 
-  clearSearch.onclick = () => {
+  clearSearch.addEventListener(
+    "click",
+    () => {
 
-    searchInput.value = "";
+      if (searchInput) {
+        searchInput.value = "";
+      }
 
-    loadHomepage();
+      loadHomepage();
 
-  };
-
+    }
+  );
 }
-
 
 /* =========================
    SEARCH BUTTON
@@ -885,25 +1006,28 @@ if (clearSearch) {
 
 if (searchBtn) {
 
-  searchBtn.onclick = () => {
+  searchBtn.addEventListener(
+    "click",
+    () => {
 
-    searchBar.classList.toggle(
-      "open"
-    );
+      if (!searchBar) return;
 
+      searchBar.classList.toggle(
+        "open"
+      );
 
-    if (
-      searchBar.classList.contains("open")
-    ) {
-
-      searchInput.focus();
+      if (
+        searchBar.classList.contains(
+          "open"
+        ) &&
+        searchInput
+      ) {
+        searchInput.focus();
+      }
 
     }
-
-  };
-
+  );
 }
-
 
 /* =========================
    MOBILE MENU
@@ -911,19 +1035,22 @@ if (searchBtn) {
 
 if (menuBtn && nav) {
 
-  menuBtn.onclick = () => {
+  menuBtn.addEventListener(
+    "click",
+    () => {
 
-    nav.classList.toggle(
-      "open"
-    );
+      nav.classList.toggle(
+        "open"
+      );
 
-  };
-
+    }
+  );
 }
 
-
 document
-  .querySelectorAll("#mainNav a")
+  .querySelectorAll(
+    "#mainNav a"
+  )
   .forEach(link => {
 
     link.addEventListener(
@@ -941,7 +1068,6 @@ document
 
   });
 
-
 /* =========================
    SUBSCRIBE
 ========================= */
@@ -951,7 +1077,6 @@ const subscribeForm =
     "subscribeForm"
   );
 
-
 if (subscribeForm) {
 
   subscribeForm.addEventListener(
@@ -960,40 +1085,34 @@ if (subscribeForm) {
 
       event.preventDefault();
 
-
       showToast(
         "Thanks! You're subscribed to FilmyRadarIndia."
       );
 
-
       subscribeForm.reset();
-
 
       const msg =
         document.getElementById(
           "subscribeMsg"
         );
 
-
       if (msg) {
-
         msg.textContent =
           "Subscription received ✓";
-
       }
 
     }
   );
-
 }
-
 
 /* =========================
    CATEGORY SEARCH
 ========================= */
 
 document
-  .querySelectorAll(".tags button")
+  .querySelectorAll(
+    ".tags button"
+  )
   .forEach(button => {
 
     button.addEventListener(
@@ -1003,19 +1122,16 @@ document
         const category =
           button.textContent.trim();
 
-
         if (searchBar) {
           searchBar.classList.add(
             "open"
           );
         }
 
-
         if (searchInput) {
           searchInput.value =
             category;
         }
-
 
         performSearch(
           category
@@ -1026,9 +1142,22 @@ document
 
   });
 
-
 /* =========================
-   START WEBSITE
+   START
 ========================= */
 
-loadHomepage();
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    loadHomepage
+  );
+
+} else {
+
+  loadHomepage();
+
+}
