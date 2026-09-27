@@ -1,65 +1,588 @@
-const movies=[
-  {title:"War 2",tag:"Bollywood",date:"14 Aug 2025",rating:"7.2",c1:"#263b4c",c2:"#0b1627"},
-  {title:"Coolie",tag:"South",date:"14 Aug 2025",rating:"7.8",c1:"#6d321e",c2:"#16120e"},
-  {title:"Saiyaara",tag:"Bollywood",date:"18 Jul 2025",rating:"8.1",c1:"#344f63",c2:"#321c2c"},
-  {title:"The Conjuring",tag:"Hollywood",date:"05 Sep 2025",rating:"7.0",c1:"#182b2e",c2:"#080b12"}
-];
-const ott=[
-  {title:"The Family Man S3",tag:"Prime Video",date:"18 Jul 2026",rating:"8.8",c1:"#1b455a",c2:"#0b111c"},
-  {title:"Squid Game S3",tag:"Netflix",date:"27 Jun 2026",rating:"8.0",c1:"#26564e",c2:"#241c3d"},
-  {title:"Housefull 5",tag:"JioHotstar",date:"06 Jun 2026",rating:"6.8",c1:"#795c31",c2:"#281b17"},
-  {title:"Kuberaa",tag:"Netflix",date:"27 Jun 2026",rating:"7.5",c1:"#314b4b",c2:"#111820"}
-];
-const series=[
-  {title:"Panchayat S4",tag:"Prime Video",date:"24 Jun 2026",rating:"8.6",c1:"#6b5728",c2:"#233323"},
-  {title:"The Old Guard 2",tag:"Netflix",date:"02 Jul 2026",rating:"7.0",c1:"#26394c",c2:"#10131c"},
-  {title:"Mirzapur",tag:"Prime Video",date:"Coming Soon",rating:"8.2",c1:"#5b2921",c2:"#11110e"},
-  {title:"Squid Game S3",tag:"Netflix",date:"27 Jun 2026",rating:"8.0",c1:"#244e47",c2:"#28193b"}
-];
-const upcoming=[
-  {title:"Kantara Chapter 1",tag:"South",date:"02 Oct 2026",rating:"—",c1:"#713b20",c2:"#15110d"},
-  {title:"Dhurandhar",tag:"Bollywood",date:"06 Dec 2026",rating:"—",c1:"#4a4b45",c2:"#10151b"},
-  {title:"The Raja Saab",tag:"South",date:"06 Dec 2026",rating:"—",c1:"#693f67",c2:"#141426"},
-  {title:"Pushpa 2 Re-Release",tag:"South",date:"05 Oct 2026",rating:"—",c1:"#70471f",c2:"#17140d"}
-];
-const news=[
-  ["OTT RELEASES THIS WEEK","This Week on OTT: 5 Must-Watch Releases","25 Sep 2026"],
-  ["TOP PICKS","Top 10 Underrated Indian Movies You Should Watch","23 Sep 2026"],
-  ["BOLLYWOOD","Upcoming Bollywood Movies — Full List","20 Sep 2026"],
-  ["REVIEWS","What to Watch This Weekend? Our Latest Picks","18 Sep 2026"]
-];
+const API = "/api/tmdb";
 
-function card(x){
- return `<article class="movie-card searchable" data-title="${x.title} ${x.tag}">
-   <div class="poster" style="--c1:${x.c1};--c2:${x.c2}">
-     <span class="badge">${x.tag}</span><span class="rating">${x.rating!=="—"?"⭐ "+x.rating:"UPCOMING"}</span>
-     <span class="poster-title">${x.title}</span>
-   </div>
-   <div class="card-meta"><h3>${x.title}</h3><p>${x.date} · <span class="star">${x.rating!=="—"?"★ "+x.rating:"Coming Soon"}</span></p></div>
- </article>`;
+const FALLBACK_IMAGE =
+  "https://placehold.co/500x750/0b1524/f5f8ff?text=No+Poster";
+
+const movieGrid = document.getElementById("movieGrid");
+const ottGrid = document.getElementById("ottGrid");
+const seriesGrid = document.getElementById("seriesGrid");
+const upcomingGrid = document.getElementById("upcomingGrid");
+const newsList = document.getElementById("newsList");
+const trendingList = document.getElementById("trendingList");
+
+const menuBtn = document.getElementById("menuBtn");
+const nav = document.getElementById("mainNav");
+
+const searchBtn = document.getElementById("searchBtn");
+const searchBar = document.getElementById("searchBar");
+const searchInput = document.getElementById("searchInput");
+const clearSearch = document.getElementById("clearSearch");
+
+const toast = document.getElementById("toast");
+
+
+/* =========================
+   API
+========================= */
+
+async function getData(action, query = "") {
+  try {
+    let url = `${API}?action=${encodeURIComponent(action)}`;
+
+    if (query) {
+      url += `&query=${encodeURIComponent(query)}`;
+    }
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("TMDB Error:", error);
+
+    showToast("Unable to load movie data");
+
+    return {
+      results: []
+    };
+  }
 }
-function render(id,data){document.getElementById(id).innerHTML=data.map(card).join("")}
-render("movieGrid",movies);render("ottGrid",ott);render("seriesGrid",series);render("upcomingGrid",upcoming);
 
-document.getElementById("newsList").innerHTML=news.map(n=>`<article class="news-item searchable" data-title="${n[0]} ${n[1]}"><div class="news-thumb">${n[0]}</div><div><span>${n[2]} · FILMYRADAR</span><h3>${n[1]}</h3><p>Latest entertainment update, release information and what-to-watch details.</p></div></article>`).join("");
 
-const trending=[["The Family Man S3","Web Series · Prime Video"],["War 2","Movie · Bollywood"],["Coolie","Movie · South"],["Squid Game S3","Web Series · Netflix"],["The Old Guard 2","Movie · Netflix"]];
-document.getElementById("trendingList").innerHTML=trending.map((x,i)=>`<div class="trend"><span class="trend-num">${i+1}</span><span class="mini-poster">🎬</span><span><b>${x[0]}</b><small>${x[1]}</small></span></div>`).join("");
+/* =========================
+   HELPERS
+========================= */
 
-const menuBtn=document.getElementById("menuBtn"), nav=document.getElementById("mainNav");
-menuBtn.onclick=()=>nav.classList.toggle("open");
-document.querySelectorAll("#mainNav a").forEach(a=>a.onclick=()=>nav.classList.remove("open"));
+function imageUrl(path, size = "w500") {
+  if (!path) return FALLBACK_IMAGE;
 
-const searchBtn=document.getElementById("searchBtn"), searchBar=document.getElementById("searchBar"), input=document.getElementById("searchInput");
-searchBtn.onclick=()=>{searchBar.classList.toggle("open");if(searchBar.classList.contains("open"))input.focus()};
-document.getElementById("clearSearch").onclick=()=>{input.value="";filter("")};
-function filter(q){
- const all=document.querySelectorAll(".searchable");let found=0;
- all.forEach(el=>{const ok=el.dataset.title.toLowerCase().includes(q.toLowerCase());el.style.display=ok?"":"none";if(ok)found++});
+  return `https://image.tmdb.org/t/p/${size}${path}`;
 }
-input.addEventListener("input",e=>filter(e.target.value));
 
-const toast=document.getElementById("toast");
-function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),2500)}
-document.getElementById("subscribeForm").onsubmit=e=>{e.preventDefault();showToast("Thanks! You’re subscribed to FilmyRadarIndia.");e.target.reset();document.getElementById("subscribeMsg").textContent="Subscription received ✓"};
-document.querySelectorAll(".tags button").forEach(b=>b.onclick=()=>{document.getElementById("searchBar").classList.add("open");input.value=b.textContent;filter(b.textContent)});
+
+function escapeHTML(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+function formatDate(date) {
+  if (!date) return "Release date unavailable";
+
+  const d = new Date(date);
+
+  if (Number.isNaN(d.getTime())) {
+    return date;
+  }
+
+  return d.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+
+function rating(value) {
+  if (!value || Number(value) === 0) {
+    return "—";
+  }
+
+  return Number(value).toFixed(1);
+}
+
+
+function titleOf(item) {
+  return item.title || item.name || item.original_title || item.original_name || "Untitled";
+}
+
+
+function dateOf(item) {
+  return item.release_date || item.first_air_date || "";
+}
+
+
+function typeOf(item) {
+  if (item.media_type === "tv" || item.first_air_date) {
+    return "Series";
+  }
+
+  return "Movie";
+}
+
+
+/* =========================
+   MOVIE CARD
+========================= */
+
+function movieCard(item, badge = "") {
+  const title = titleOf(item);
+  const date = dateOf(item);
+  const score = rating(item.vote_average);
+  const poster = imageUrl(item.poster_path);
+
+  return `
+    <article
+      class="movie-card searchable"
+      data-title="${escapeHTML(title)}"
+    >
+      <div
+        class="poster real-poster"
+        style="background-image:
+          linear-gradient(180deg, transparent 35%, rgba(0,0,0,.85) 100%),
+          url('${poster}')"
+      >
+
+        ${
+          badge
+            ? `<span class="badge">${escapeHTML(badge)}</span>`
+            : ""
+        }
+
+        <span class="rating">
+          ${score !== "—" ? `⭐ ${score}` : "N/A"}
+        </span>
+
+        <span class="poster-title">
+          ${escapeHTML(title)}
+        </span>
+      </div>
+
+      <div class="card-meta">
+        <h3>${escapeHTML(title)}</h3>
+
+        <p>
+          ${date ? formatDate(date) : "Coming Soon"}
+          ·
+          <span class="star">
+            ${score !== "—" ? `★ ${score}` : "No Rating"}
+          </span>
+        </p>
+      </div>
+    </article>
+  `;
+}
+
+
+/* =========================
+   RENDER GRID
+========================= */
+
+function renderGrid(element, results, badge = "") {
+  if (!element) return;
+
+  if (!results || results.length === 0) {
+    element.innerHTML = `
+      <div style="
+        grid-column:1/-1;
+        padding:30px;
+        text-align:center;
+        color:#91a1b8;
+      ">
+        No titles available right now.
+      </div>
+    `;
+
+    return;
+  }
+
+  element.innerHTML = results
+    .slice(0, 8)
+    .map(item => movieCard(item, badge))
+    .join("");
+}
+
+
+/* =========================
+   TRENDING
+========================= */
+
+function renderTrending(results) {
+  if (!trendingList) return;
+
+  const items = results
+    .filter(item => item.poster_path)
+    .slice(0, 5);
+
+  trendingList.innerHTML = items
+    .map((item, index) => {
+      const title = titleOf(item);
+
+      return `
+        <div class="trend">
+          <span class="trend-num">${index + 1}</span>
+
+          <span
+            class="mini-poster"
+            style="
+              background-image:
+              linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2)),
+              url('${imageUrl(item.poster_path, "w185")}')
+            "
+          ></span>
+
+          <span>
+            <b>${escapeHTML(title)}</b>
+
+            <small>
+              ${typeOf(item)}
+              · ⭐ ${rating(item.vote_average)}
+            </small>
+          </span>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+
+/* =========================
+   NEWS
+========================= */
+
+function renderNews() {
+  if (!newsList) return;
+
+  newsList.innerHTML = `
+    <article class="news-item">
+      <div class="news-thumb">TMDB</div>
+
+      <div>
+        <span>FILMYRADAR</span>
+        <h3>Latest movies and shows are updated automatically</h3>
+        <p>
+          FilmyRadarIndia now fetches live movie and TV information
+          from TMDB.
+        </p>
+      </div>
+    </article>
+
+    <article class="news-item">
+      <div class="news-thumb">OTT</div>
+
+      <div>
+        <span>OTT GUIDE</span>
+        <h3>Discover popular movies available on streaming platforms</h3>
+        <p>
+          Explore popular titles and OTT availability through
+          dynamically fetched data.
+        </p>
+      </div>
+    </article>
+
+    <article class="news-item">
+      <div class="news-thumb">TRENDING</div>
+
+      <div>
+        <span>NOW TRENDING</span>
+        <h3>See what's trending right now</h3>
+        <p>
+          Trending titles are automatically refreshed from TMDB.
+        </p>
+      </div>
+    </article>
+  `;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+function updateHero(item) {
+  if (!item) return;
+
+  const heroTitle = document.querySelector(".hero h1");
+  const heroSubtitle = document.querySelector(".hero h2");
+  const heroText = document.querySelector(".hero p");
+  const heroPoster = document.querySelector(".hero-poster");
+  const heroPill = document.querySelector(".hero .pill");
+
+  const title = titleOf(item);
+
+  if (heroTitle) {
+    heroTitle.innerHTML = escapeHTML(title);
+  }
+
+  if (heroSubtitle) {
+    heroSubtitle.textContent =
+      item.overview
+        ? item.overview.slice(0, 100) + "..."
+        : "Discover what's trending right now.";
+  }
+
+  if (heroText) {
+    heroText.textContent =
+      item.overview ||
+      "Discover the latest movies, OTT releases, web series and entertainment updates.";
+  }
+
+  if (heroPill) {
+    heroPill.textContent = "🔥 TRENDING NOW";
+  }
+
+  if (heroPoster && item.poster_path) {
+    heroPoster.style.backgroundImage =
+      `linear-gradient(180deg,transparent 25%,rgba(0,0,0,.9)),url('${imageUrl(item.poster_path, "w500")}')`;
+
+    heroPoster.style.backgroundSize = "cover";
+    heroPoster.style.backgroundPosition = "center";
+    heroPoster.style.padding = "0";
+  }
+
+  if (heroPoster) {
+    heroPoster.innerHTML = `
+      <div style="
+        position:absolute;
+        left:15px;
+        right:15px;
+        bottom:18px;
+        z-index:2;
+        text-shadow:0 2px 8px #000;
+      ">
+        <div style="
+          font-size:11px;
+          font-weight:800;
+          color:#ffc52e;
+          margin-bottom:5px;
+        ">
+          TRENDING
+        </div>
+
+        <strong style="
+          display:block;
+          font-size:22px;
+          line-height:1.05;
+          color:white;
+        ">
+          ${escapeHTML(title)}
+        </strong>
+      </div>
+    `;
+  }
+}
+
+
+/* =========================
+   LOAD HOMEPAGE
+========================= */
+
+async function loadHomepage() {
+  movieGrid.innerHTML = `<div class="loading">Loading movies...</div>`;
+  ottGrid.innerHTML = `<div class="loading">Loading OTT titles...</div>`;
+  seriesGrid.innerHTML = `<div class="loading">Loading series...</div>`;
+  upcomingGrid.innerHTML = `<div class="loading">Loading upcoming releases...</div>`;
+
+  const [
+    trending,
+    movies,
+    ott,
+    series,
+    upcoming
+  ] = await Promise.all([
+    getData("trending"),
+    getData("movies"),
+    getData("ott"),
+    getData("tv"),
+    getData("upcoming")
+  ]);
+
+  renderGrid(
+    movieGrid,
+    movies.results,
+    "MOVIE"
+  );
+
+  renderGrid(
+    ottGrid,
+    ott.results,
+    "OTT"
+  );
+
+  renderGrid(
+    seriesGrid,
+    series.results,
+    "SERIES"
+  );
+
+  renderGrid(
+    upcomingGrid,
+    upcoming.results,
+    "UPCOMING"
+  );
+
+  renderTrending(trending.results || []);
+
+  renderNews();
+
+  updateHero(
+    (trending.results || []).find(
+      item => item.poster_path
+    )
+  );
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+async function performSearch(query) {
+  if (!query.trim()) {
+    loadHomepage();
+    return;
+  }
+
+  movieGrid.innerHTML = `
+    <div style="
+      grid-column:1/-1;
+      padding:30px;
+      text-align:center;
+      color:#91a1b8;
+    ">
+      Searching...
+    </div>
+  `;
+
+  const data = await getData("search", query);
+
+  const results = (data.results || [])
+    .filter(item =>
+      item.media_type === "movie" ||
+      item.media_type === "tv"
+    )
+    .filter(item => item.poster_path);
+
+  renderGrid(
+    movieGrid,
+    results,
+    "SEARCH"
+  );
+
+  document.querySelector("#movies")
+    ?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+}
+
+
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.trim();
+
+  clearTimeout(window.searchTimer);
+
+  window.searchTimer = setTimeout(() => {
+    if (query.length >= 2) {
+      performSearch(query);
+    }
+  }, 500);
+});
+
+
+clearSearch.onclick = () => {
+  searchInput.value = "";
+  loadHomepage();
+};
+
+
+searchBtn.onclick = () => {
+  searchBar.classList.toggle("open");
+
+  if (searchBar.classList.contains("open")) {
+    searchInput.focus();
+  }
+};
+
+
+/* =========================
+   MENU
+========================= */
+
+menuBtn.onclick = () => {
+  nav.classList.toggle("open");
+};
+
+
+document.querySelectorAll("#mainNav a").forEach(link => {
+  link.addEventListener("click", () => {
+    nav.classList.remove("open");
+  });
+});
+
+
+/* =========================
+   SUBSCRIBE
+========================= */
+
+function showToast(message) {
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
+}
+
+
+const subscribeForm =
+  document.getElementById("subscribeForm");
+
+
+if (subscribeForm) {
+  subscribeForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    showToast(
+      "Thanks! You're subscribed to FilmyRadarIndia."
+    );
+
+    subscribeForm.reset();
+
+    const msg =
+      document.getElementById("subscribeMsg");
+
+    if (msg) {
+      msg.textContent =
+        "Subscription received ✓";
+    }
+  });
+}
+
+
+/* =========================
+   CATEGORY SEARCH
+========================= */
+
+document.querySelectorAll(".tags button")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      searchBar.classList.add("open");
+
+      searchInput.value =
+        button.textContent.trim();
+
+      performSearch(
+        button.textContent.trim()
+      );
+    });
+
+  });
+
+
+/* =========================
+   START
+========================= */
+
+loadHomepage();
