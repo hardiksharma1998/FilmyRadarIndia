@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FilmyRadarIndia — Movies, Web Series, OTT releases, reviews, news and upcoming entertainment.">
+  <title>FilmyRadarIndia — Movies, OTT, Web Series & Reviews</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a class="brand" href="#">
+        <span class="brand-icon">🎬</span>
+        <span><b>FilmyRadar</b><em>India</em><small>Movies • Series • OTT • Reviews</small></span>
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+      <nav id="mainNav">
+        <a class="active" href="#home">Home</a>
+        <a href="#movies">Movies</a>
+        <a href="#ott">OTT Releases</a>
+        <a href="#series">Web Series</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#news">News</a>
+        <a href="#upcoming">Upcoming</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Search">⌕</button>
+        <a href="#" aria-label="YouTube">▶</a>
+        <a href="#" aria-label="Instagram">◎</a>
+        <a href="#" aria-label="Telegram">➤</a>
+      </div>
+    </div>
+    <div class="search-bar" id="searchBar">
+      <div class="container search-inner">
+        <input id="searchInput" type="search" placeholder="Search movies, series, OTT platforms..." autocomplete="off">
+        <button id="clearSearch">Clear</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero container">
+      <div class="hero-copy">
+        <span class="pill">🔥 NEW ON OTT</span>
+        <h1>The Family Man <span>S3</span></h1>
+        <h2>Raj & DK's spy thriller returns.</h2>
+        <p>Discover what to watch next — latest movies, OTT releases, web series, reviews and entertainment news, all in one place.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#ott">Explore OTT Releases →</a>
+          <a class="btn ghost" href="#movies">Browse Movies</a>
+        </div>
+        <div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="hero-art">
+        <div class="hero-glow"></div>
+        <div class="hero-poster">
+          <div class="poster-top">THE</div>
+          <strong>FAMILY<br>MAN</strong>
+          <span>SEASON 3</span>
+        </div>
+        <div class="hero-person">★</div>
+      </div>
+    </section>
+
+    <section class="container quick-grid">
+      <a href="#movies"><span>🎞️</span><b>Movies</b></a>
+      <a href="#ott"><span>📺</span><b>OTT Releases</b></a>
+      <a href="#series"><span>🎬</span><b>Web Series</b></a>
+      <a href="#reviews"><span>⭐</span><b>Reviews</b></a>
+      <a href="#trending"><span>🔥</span><b>Trending</b></a>
+      <a href="#upcoming"><span>📅</span><b>Upcoming</b></a>
+      <a href="#news"><span>🔔</span><b>Hot News</b></a>
+    </section>
+
+    <div class="container content-layout">
+      <div class="main-content">
+        <section class="section" id="movies">
+          <div class="section-head"><h2>🎞️ Latest Movies</h2><a href="#">View All →</a></div>
+          <div class="card-grid" id="movieGrid"></div>
+        </section>
+
+        <section class="section" id="ott">
+          <div class="section-head"><h2>📺 OTT Releases</h2><a href="#">View All →</a></div>
+          <div class="card-grid" id="ottGrid"></div>
+        </section>
+
+        <section class="section" id="series">
+          <div class="section-head"><h2>🎬 Web Series</h2><a href="#">View All →</a></div>
+          <div class="card-grid" id="seriesGrid"></div>
+        </section>
+
+        <section class="section" id="upcoming">
+          <div class="section-head"><h2>📅 Upcoming Releases</h2><a href="#">View All →</a></div>
+          <div class="card-grid" id="upcomingGrid"></div>
+        </section>
+
+        <section class="section" id="news">
+          <div class="section-head"><h2>📰 Latest News & Articles</h2><a href="#">View All →</a></div>
+          <div class="news-list" id="newsList"></div>
+        </section>
+      </div>
+
+      <aside class="sidebar">
+        <section class="side-card" id="trending">
+          <div class="side-head"><h2>🔥 Trending Now</h2></div>
+          <div id="trendingList"></div>
+        </section>
+
+        <section class="side-card subscribe">
+          <h2>✉️ Get Latest Updates</h2>
+          <p>Movie, series, OTT releases & more directly in your inbox.</p>
+          <form id="subscribeForm">
+            <input type="email" required placeholder="Enter your email address">
+            <button class="btn primary" type="submit">Subscribe</button>
+          </form>
+          <small id="subscribeMsg"></small>
+        </section>
+
+        <section class="side-card">
+          <h2>📱 Follow Us</h2>
+          <div class="social-list">
+            <a href="#"><span>▶</span> YouTube <b>Subscribe →</b></a>
+            <a href="#"><span>◎</span> Instagram <b>Follow →</b></a>
+            <a href="#"><span>➤</span> Telegram <b>Join Channel →</b></a>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <h2>Popular Categories</h2>
+          <div class="tags">
+            <button>Bollywood</button><button>Hollywood</button><button>South Indian</button>
+            <button>Web Series</button><button>Netflix</button><button>Prime Video</button>
+            <button>JioHotstar</button><button>ZEE5</button><button>SonyLIV</button>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <section class="container cta">
+      <div>
+        <span class="brand-icon">🎬</span>
+        <div><h2>Stay Updated with FilmyRadarIndia</h2><p>Movies • Series • OTT • Reviews • News</p></div>
+      </div>
+      <div class="cta-buttons"><a class="btn primary" href="#">◎ Follow on Instagram</a><a class="btn ghost" href="#">➤ Join Telegram</a></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand"><a class="brand" href="#"><span class="brand-icon">🎬</span><span><b>FilmyRadar</b><em>India</em><small>Your Ultimate Movie & OTT Guide</small></span></a></div>
+      <div class="footer-links"><a href="#home">Home</a><a href="#movies">Movies</a><a href="#ott">OTT Releases</a><a href="#series">Web Series</a><a href="#reviews">Reviews</a><a href="#news">News</a><a href="#upcoming">Upcoming</a><a href="#">About Us</a><a href="#">Contact</a></div>
+      <div class="copyright">© 2026 FilmyRadarIndia. All rights reserved.<br><a href="#">Privacy Policy</a> · <a href="#">Disclaimer</a></div>
+    </div>
+  </footer>
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
