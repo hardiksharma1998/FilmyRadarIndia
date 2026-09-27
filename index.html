@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -8,24 +10,28 @@
     content="width=device-width, initial-scale=1.0"
   >
 
+  <title>
+    FilmyRadarIndia — Latest Movies, OTT Releases, Web Series & Reviews
+  </title>
+
   <meta
     name="description"
-    content="FilmyRadarIndia brings the latest movies, OTT releases, web series, ratings, reviews, trending entertainment and upcoming releases in one place."
+    content="FilmyRadarIndia brings the latest movies, OTT releases, web series, ratings, reviews, trending entertainment and upcoming releases in India."
   >
 
   <meta
     name="keywords"
-    content="movies, Bollywood, Hollywood, South Indian movies, OTT releases, Netflix, Prime Video, JioHotstar, web series, movie reviews, upcoming movies, FilmyRadarIndia"
-  >
-
-  <meta
-    name="robots"
-    content="index, follow, max-image-preview:large"
+    content="movies, Bollywood movies, OTT releases, web series, movie reviews, Netflix releases, Prime Video, JioHotstar, upcoming movies, Indian cinema"
   >
 
   <meta
     name="author"
     content="FilmyRadarIndia"
+  >
+
+  <meta
+    name="robots"
+    content="index, follow"
   >
 
   <link
@@ -34,10 +40,6 @@
   >
 
   <!-- Open Graph -->
-  <meta
-    property="og:type"
-    content="website"
-  >
 
   <meta
     property="og:title"
@@ -46,7 +48,12 @@
 
   <meta
     property="og:description"
-    content="Latest movies, OTT releases, web series, ratings, reviews, trending entertainment and upcoming releases."
+    content="Discover latest movies, OTT releases, web series, ratings, reviews and upcoming entertainment."
+  >
+
+  <meta
+    property="og:type"
+    content="website"
   >
 
   <meta
@@ -59,12 +66,8 @@
     content="FilmyRadarIndia"
   >
 
-  <meta
-    property="og:locale"
-    content="en_IN"
-  >
+  <!-- Twitter -->
 
-  <!-- Twitter / X -->
   <meta
     name="twitter:card"
     content="summary_large_image"
@@ -77,14 +80,11 @@
 
   <meta
     name="twitter:description"
-    content="Discover movies, OTT releases, web series, ratings, reviews and upcoming entertainment."
+    content="Latest movies, OTT releases, web series, ratings and entertainment news."
   >
 
-  <title>
-    FilmyRadarIndia — Movies, OTT, Web Series & Reviews
-  </title>
-
   <!-- Fonts -->
+
   <link
     rel="preconnect"
     href="https://fonts.googleapis.com"
@@ -107,13 +107,14 @@
   >
 
   <!-- Website Schema -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "FilmyRadarIndia",
     "url": "https://filmy-radar-india.vercel.app/",
-    "description": "Movies, OTT releases, web series, reviews, trending entertainment and upcoming releases.",
+    "description": "Latest movies, OTT releases, web series, ratings, reviews and entertainment news.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://filmy-radar-india.vercel.app/?search={search_term_string}",
@@ -121,141 +122,70 @@
     }
   }
   </script>
+
 </head>
+
 
 <body>
 
   <!-- =========================
        HEADER
-  ========================== -->
+  ========================= -->
 
-  <header class="header">
+  <header class="site-header">
 
-    <div class="container nav">
+    <div class="container nav-wrap">
 
       <a
-        class="brand"
-        href="#home"
+        href="#"
+        class="logo"
         aria-label="FilmyRadarIndia Home"
       >
-
-        <span class="brand-icon">🎬</span>
-
+        <span class="logo-icon">🎬</span>
         <span>
-          <b>FilmyRadar</b>
-          <em>India</em>
-          <small>
-            Movies • Series • OTT • Reviews
-          </small>
+          FilmyRadar<span>India</span>
         </span>
-
       </a>
 
-      <button
-        class="menu-btn"
-        id="menuBtn"
-        aria-label="Open menu"
-        type="button"
-      >
-        ☰
-      </button>
 
       <nav
+        class="main-nav"
         id="mainNav"
-        aria-label="Main navigation"
       >
 
-        <a
-          class="active"
-          href="#home"
-        >
-          Home
-        </a>
+        <a href="#movies">Movies</a>
 
-        <a href="#movies">
-          Movies
-        </a>
+        <a href="#ott">OTT</a>
 
-        <a href="#ott">
-          OTT Releases
-        </a>
+        <a href="#series">Web Series</a>
 
-        <a href="#series">
-          Web Series
-        </a>
+        <a href="#reviews">Reviews</a>
 
-        <a href="#reviews">
-          Reviews
-        </a>
+        <a href="#upcoming">Upcoming</a>
 
-        <a href="#news">
-          News
-        </a>
-
-        <a href="#upcoming">
-          Upcoming
-        </a>
+        <a href="#news">News</a>
 
       </nav>
+
 
       <div class="nav-actions">
 
         <button
           class="icon-btn"
           id="searchBtn"
-          aria-label="Search"
           type="button"
+          aria-label="Search"
         >
-          ⌕
+          🔍
         </button>
 
-        <a
-          href="#"
-          aria-label="YouTube"
-        >
-          ▶
-        </a>
-
-        <a
-          href="#"
-          aria-label="Instagram"
-        >
-          ◎
-        </a>
-
-        <a
-          href="#"
-          aria-label="Telegram"
-        >
-          ➤
-        </a>
-
-      </div>
-
-    </div>
-
-    <!-- SEARCH -->
-
-    <div
-      class="search-bar"
-      id="searchBar"
-    >
-
-      <div class="container search-inner">
-
-        <input
-          id="searchInput"
-          type="search"
-          placeholder="Search movies, series, OTT platforms..."
-          autocomplete="off"
-          aria-label="Search movies and series"
-        >
-
         <button
-          id="clearSearch"
+          class="menu-btn"
+          id="menuBtn"
           type="button"
+          aria-label="Open menu"
         >
-          Clear
+          ☰
         </button>
 
       </div>
@@ -266,98 +196,107 @@
 
 
   <!-- =========================
-       MAIN
-  ========================== -->
+       SEARCH
+  ========================= -->
 
-  <main id="home">
+  <div
+    class="search-bar"
+    id="searchBar"
+  >
 
-    <!-- HERO -->
+    <div class="container search-inner">
 
-    <section
-      class="hero container"
-      aria-label="Featured entertainment"
-    >
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="Search movies, series..."
+        autocomplete="off"
+      >
 
-      <div class="hero-copy">
+      <button
+        id="clearSearch"
+        type="button"
+      >
+        ✕
+      </button>
 
-        <span class="pill">
-          🔥 TRENDING NOW
-        </span>
+    </div>
 
-        <h1>
-          The Family Man
-          <span>S3</span>
-        </h1>
+  </div>
 
-        <h2>
-          Latest movies, OTT & web series
-        </h2>
 
-        <p>
-          Discover what to watch next — latest movies,
-          OTT releases, web series, reviews, ratings,
-          trending entertainment and upcoming releases,
-          all in one place.
-        </p>
+  <main>
 
-        <div class="hero-actions">
 
-          <a
-            class="btn primary"
-            href="#ott"
-          >
-            Explore OTT Releases →
-          </a>
+    <!-- =========================
+         HERO
+    ========================= -->
 
-          <a
-            class="btn ghost"
-            href="#movies"
-          >
-            Browse Movies
-          </a>
+    <section class="hero">
+
+      <div class="hero-art"></div>
+
+      <div class="container hero-inner">
+
+        <div class="hero-copy">
+
+          <span class="pill">
+            🔥 TRENDING NOW
+          </span>
+
+          <h1>
+            Latest Movies, OTT & Web Series
+          </h1>
+
+          <h2>
+            Discover what's trending right now
+          </h2>
+
+          <p>
+            Explore the latest movies, OTT releases, web series,
+            ratings, upcoming releases and trending entertainment
+            on FilmyRadarIndia.
+          </p>
+
+          <div class="hero-buttons">
+
+            <a
+              href="#movies"
+              class="btn primary"
+            >
+              Explore Movies
+            </a>
+
+            <a
+              href="#ott"
+              class="btn secondary"
+            >
+              Explore OTT
+            </a>
+
+          </div>
 
         </div>
 
-        <div
-          class="dots"
-          aria-hidden="true"
-        >
-          <i class="on"></i>
-          <i></i>
-          <i></i>
-          <i></i>
-          <i></i>
-        </div>
-
-      </div>
-
-
-      <div class="hero-art">
-
-        <div class="hero-glow"></div>
 
         <div class="hero-poster">
 
-          <div class="poster-top">
-            THE
+          <div class="hero-poster-content">
+
+            <span>
+              FILMYRADARINDIA
+            </span>
+
+            <strong>
+              🎬
+            </strong>
+
+            <small>
+              Movies • OTT • Series
+            </small>
+
           </div>
 
-          <strong>
-            FAMILY<br>
-            MAN
-          </strong>
-
-          <span>
-            SEASON 3
-          </span>
-
-        </div>
-
-        <div
-          class="hero-person"
-          aria-hidden="true"
-        >
-          ★
         </div>
 
       </div>
@@ -365,443 +304,1288 @@
     </section>
 
 
-    <!-- QUICK CATEGORIES -->
+    <!-- =========================
+         CATEGORIES
+    ========================= -->
 
-    <section
-      class="container quick-grid"
-      aria-label="Quick categories"
-    >
+    <section class="category-section">
 
-      <a href="#movies">
-        <span>🎞️</span>
-        <b>Movies</b>
-      </a>
+      <div class="container">
 
-      <a href="#ott">
-        <span>📺</span>
-        <b>OTT Releases</b>
-      </a>
+        <div class="tags">
 
-      <a href="#series">
-        <span>🎬</span>
-        <b>Web Series</b>
-      </a>
+          <button type="button">
+            Bollywood
+          </button>
 
-      <a href="#reviews">
-        <span>⭐</span>
-        <b>Reviews</b>
-      </a>
+          <button type="button">
+            Hollywood
+          </button>
 
-      <a href="#trending">
-        <span>🔥</span>
-        <b>Trending</b>
-      </a>
+          <button type="button">
+            South
+          </button>
 
-      <a href="#upcoming">
-        <span>📅</span>
-        <b>Upcoming</b>
-      </a>
+          <button type="button">
+            Netflix
+          </button>
 
-      <a href="#news">
-        <span>🔔</span>
-        <b>Hot News</b>
-      </a>
+          <button type="button">
+            Prime Video
+          </button>
+
+          <button type="button">
+            JioHotstar
+          </button>
+
+          <button type="button">
+            Thriller
+          </button>
+
+          <button type="button">
+            Action
+          </button>
+
+        </div>
+
+      </div>
 
     </section>
 
 
-    <!-- CONTENT LAYOUT -->
+    <!-- =========================
+         MOVIES
+    ========================= -->
 
-    <div class="container content-layout">
+    <section
+      class="section"
+      id="movies"
+    >
 
-      <div class="main-content">
+      <div class="container">
 
+        <div class="section-head">
 
-        <!-- MOVIES -->
+          <div>
 
-        <section
-          class="section"
-          id="movies"
-        >
-
-          <div class="section-head">
+            <span class="section-label">
+              LATEST
+            </span>
 
             <h2>
-              🎞️ Latest Movies
+              Latest Movies
             </h2>
-
-            <a href="#">
-              View All →
-            </a>
 
           </div>
 
-          <div
-            class="card-grid"
-            id="movieGrid"
-          ></div>
+          <a href="#movies">
+            View All →
+          </a>
 
-        </section>
+        </div>
 
 
-        <!-- OTT -->
-
-        <section
-          class="section"
-          id="ott"
+        <div
+          class="card-grid"
+          id="movieGrid"
         >
 
-          <div class="section-head">
+          <!-- SEO FALLBACK -->
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster poster-one"
+            >
+
+              <span class="badge">
+                Movie
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  Latest Movie Releases
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 7.8
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Latest Movie Releases
+              </h3>
+
+              <p>
+
+                <span>
+                  ⭐ 7.8
+                </span>
+
+                <span>
+                  Movie
+                </span>
+
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster poster-two"
+            >
+
+              <span class="badge">
+                Movie
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  Trending Movies
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 8.0
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Trending Movies
+              </h3>
+
+              <p>
+
+                <span>
+                  ⭐ 8.0
+                </span>
+
+                <span>
+                  Movie
+                </span>
+
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster poster-three"
+            >
+
+              <span class="badge">
+                Movie
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  Popular Indian Movies
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 7.9
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Popular Indian Movies
+              </h3>
+
+              <p>
+
+                <span>
+                  ⭐ 7.9
+                </span>
+
+                <span>
+                  Movie
+                </span>
+
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster poster-four"
+            >
+
+              <span class="badge">
+                Movie
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  New Cinema Releases
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 8.1
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                New Cinema Releases
+              </h3>
+
+              <p>
+
+                <span>
+                  ⭐ 8.1
+                </span>
+
+                <span>
+                  Movie
+                </span>
+
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         OTT
+    ========================= -->
+
+    <section
+      class="section section-alt"
+      id="ott"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <span class="section-label">
+              STREAMING
+            </span>
 
             <h2>
-              📺 OTT Releases
+              New OTT Releases
             </h2>
-
-            <a href="#">
-              View All →
-            </a>
 
           </div>
 
-          <div
-            class="card-grid"
-            id="ottGrid"
-          ></div>
+          <a href="#ott">
+            View All →
+          </a>
 
-        </section>
+        </div>
 
 
-        <!-- WEB SERIES -->
-
-        <section
-          class="section"
-          id="series"
+        <div
+          class="card-grid"
+          id="ottGrid"
         >
 
-          <div class="section-head">
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster ott-one"
+            >
+
+              <span class="badge">
+                OTT
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  New OTT Releases
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 8.2
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                New OTT Releases
+              </h3>
+
+              <p>
+                <span>⭐ 8.2</span>
+                <span>OTT</span>
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster ott-two"
+            >
+
+              <span class="badge">
+                Netflix
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  Netflix Releases
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 8.1
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Netflix Releases
+              </h3>
+
+              <p>
+                <span>⭐ 8.1</span>
+                <span>OTT</span>
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster ott-three"
+            >
+
+              <span class="badge">
+                Prime Video
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  Prime Video Releases
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 8.0
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Prime Video Releases
+              </h3>
+
+              <p>
+                <span>⭐ 8.0</span>
+                <span>OTT</span>
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster ott-four"
+            >
+
+              <span class="badge">
+                JioHotstar
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  JioHotstar Releases
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 7.9
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                JioHotstar Releases
+              </h3>
+
+              <p>
+                <span>⭐ 7.9</span>
+                <span>OTT</span>
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         SERIES
+    ========================= -->
+
+    <section
+      class="section"
+      id="series"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <span class="section-label">
+              STREAMING
+            </span>
 
             <h2>
-              🎬 Web Series
+              Trending Web Series
             </h2>
-
-            <a href="#">
-              View All →
-            </a>
 
           </div>
 
-          <div
-            class="card-grid"
-            id="seriesGrid"
-          ></div>
+          <a href="#series">
+            View All →
+          </a>
 
-        </section>
+        </div>
 
 
-        <!-- REVIEWS -->
-
-        <section
-          class="section"
-          id="reviews"
+        <div
+          class="card-grid"
+          id="seriesGrid"
         >
 
-          <div class="section-head">
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster series-one"
+            >
+
+              <span class="badge">
+                Series
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  Trending Web Series
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 8.4
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Trending Web Series
+              </h3>
+
+              <p>
+                <span>⭐ 8.4</span>
+                <span>Series</span>
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster series-two"
+            >
+
+              <span class="badge">
+                Series
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  New Web Series
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 8.2
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                New Web Series
+              </h3>
+
+              <p>
+                <span>⭐ 8.2</span>
+                <span>Series</span>
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster series-three"
+            >
+
+              <span class="badge">
+                Series
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  Popular Indian Series
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 8.0
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Popular Indian Series
+              </h3>
+
+              <p>
+                <span>⭐ 8.0</span>
+                <span>Series</span>
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster series-four"
+            >
+
+              <span class="badge">
+                Series
+              </span>
+
+              <div class="poster-content">
+
+                <h3>
+                  Must Watch Series
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    ⭐ 7.9
+                  </span>
+
+                  <span>
+                    2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Must Watch Series
+              </h3>
+
+              <p>
+                <span>⭐ 7.9</span>
+                <span>Series</span>
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         REVIEWS
+    ========================= -->
+
+    <section
+      class="section section-alt"
+      id="reviews"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <span class="section-label">
+              RATINGS
+            </span>
 
             <h2>
-              ⭐ Reviews & Ratings
+              Reviews & Ratings
             </h2>
-
-            <a href="#">
-              View All →
-            </a>
 
           </div>
 
-          <div class="review-intro">
+        </div>
+
+
+        <div class="review-grid">
+
+          <article class="review-card">
+
+            <div class="review-score">
+              ⭐ 8.5
+            </div>
 
             <h3>
-              Find Your Next Watch
+              Latest Movie Ratings
             </h3>
 
             <p>
-              Explore movie and series ratings,
-              discover what's trending and decide
-              what to watch next.
+              Discover ratings and audience reactions
+              for the latest movies and entertainment.
             </p>
 
-            <div class="review-points">
+          </article>
 
-              <span>
-                ⭐ TMDB Ratings
+
+          <article class="review-card">
+
+            <div class="review-score">
+              ⭐ 8.2
+            </div>
+
+            <h3>
+              OTT Recommendations
+            </h3>
+
+            <p>
+              Find popular movies and series currently
+              trending across streaming platforms.
+            </p>
+
+          </article>
+
+
+          <article class="review-card">
+
+            <div class="review-score">
+              🎬
+            </div>
+
+            <h3>
+              What To Watch
+            </h3>
+
+            <p>
+              Explore trending titles and upcoming
+              releases before deciding what to watch.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         UPCOMING
+    ========================= -->
+
+    <section
+      class="section"
+      id="upcoming"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <span class="section-label">
+              COMING SOON
+            </span>
+
+            <h2>
+              Upcoming Movies
+            </h2>
+
+          </div>
+
+          <a href="#upcoming">
+            View All →
+          </a>
+
+        </div>
+
+
+        <div
+          class="card-grid"
+          id="upcomingGrid"
+        >
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster upcoming-one"
+            >
+
+              <span class="badge">
+                Upcoming
               </span>
 
-              <span>
-                🎬 Movies
+              <div class="poster-content">
+
+                <h3>
+                  Upcoming Movies
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    📅 2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Upcoming Movies
+              </h3>
+
+              <p>
+                <span>📅 2026</span>
+                <span>Upcoming</span>
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="movie-card">
+
+            <div
+              class="poster fallback-poster upcoming-two"
+            >
+
+              <span class="badge">
+                Upcoming
               </span>
 
-              <span>
-                📺 Web Series
+              <div class="poster-content">
+
+                <h3>
+                  Upcoming Releases
+                </h3>
+
+                <div class="meta">
+
+                  <span>
+                    📅 2026
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="movie-info">
+
+              <h3>
+                Upcoming Releases
+              </h3>
+
+              <p>
+                <span>📅 2026</span>
+                <span>Upcoming</span>
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         TRENDING + NEWS
+    ========================= -->
+
+    <section
+      class="section section-alt"
+    >
+
+      <div class="container two-column">
+
+
+        <!-- TRENDING -->
+
+        <div>
+
+          <div class="section-head">
+
+            <div>
+
+              <span class="section-label">
+                NOW
               </span>
 
-              <span>
-                🔥 Trending
-              </span>
+              <h2>
+                Trending Now
+              </h2>
 
             </div>
 
           </div>
 
-        </section>
+
+          <div
+            class="trending-list"
+            id="trendingList"
+          >
+
+            <div class="trending-item">
+
+              <div class="trend-number">
+                01
+              </div>
+
+              <div class="mini-poster">
+                🎬
+              </div>
+
+              <div class="trend-info">
+
+                <h3>
+                  Trending Movies & Series
+                </h3>
+
+                <p>
+                  ⭐ 8.2 · Popular
+                </p>
+
+              </div>
+
+            </div>
 
 
-        <!-- UPCOMING -->
+            <div class="trending-item">
 
-        <section
-          class="section"
-          id="upcoming"
-        >
+              <div class="trend-number">
+                02
+              </div>
 
-          <div class="section-head">
+              <div class="mini-poster">
+                📺
+              </div>
 
-            <h2>
-              📅 Upcoming Releases
-            </h2>
+              <div class="trend-info">
 
-            <a href="#">
-              View All →
-            </a>
+                <h3>
+                  Latest OTT Titles
+                </h3>
+
+                <p>
+                  ⭐ 8.0 · OTT
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="trending-item">
+
+              <div class="trend-number">
+                03
+              </div>
+
+              <div class="mini-poster">
+                🍿
+              </div>
+
+              <div class="trend-info">
+
+                <h3>
+                  Popular Entertainment
+                </h3>
+
+                <p>
+                  ⭐ 7.9 · Trending
+                </p>
+
+              </div>
+
+            </div>
 
           </div>
 
-          <div
-            class="card-grid"
-            id="upcomingGrid"
-          ></div>
-
-        </section>
+        </div>
 
 
         <!-- NEWS -->
 
-        <section
-          class="section"
-          id="news"
-        >
+        <div id="news">
 
           <div class="section-head">
 
-            <h2>
-              📰 Latest News & Articles
-            </h2>
+            <div>
 
-            <a href="#">
-              View All →
-            </a>
+              <span class="section-label">
+                UPDATES
+              </span>
+
+              <h2>
+                Latest News & Articles
+              </h2>
+
+            </div>
 
           </div>
+
 
           <div
             class="news-list"
             id="newsList"
-          ></div>
+          >
 
-        </section>
+            <article class="news-item">
 
-      </div>
+              <div class="news-thumb">
+                🎬
+              </div>
 
+              <div class="news-content">
 
-      <!-- =========================
-           SIDEBAR
-      ========================== -->
+                <span class="news-tag">
+                  Movies
+                </span>
 
-      <aside class="sidebar">
+                <h3>
+                  Latest Movie Releases & Updates
+                </h3>
 
+                <p>
+                  Stay updated with the latest movie
+                  releases and entertainment news.
+                </p>
 
-        <!-- TRENDING -->
+              </div>
 
-        <section
-          class="side-card"
-          id="trending"
-        >
-
-          <div class="side-head">
-
-            <h2>
-              🔥 Trending Now
-            </h2>
-
-          </div>
-
-          <div id="trendingList"></div>
-
-        </section>
+            </article>
 
 
-        <!-- SUBSCRIBE -->
+            <article class="news-item">
 
-        <section class="side-card subscribe">
+              <div class="news-thumb">
+                📺
+              </div>
 
-          <h2>
-            ✉️ Get Latest Updates
-          </h2>
+              <div class="news-content">
 
-          <p>
-            Movie, series, OTT releases & more
-            directly in your inbox.
-          </p>
+                <span class="news-tag">
+                  OTT
+                </span>
 
-          <form id="subscribeForm">
+                <h3>
+                  New OTT Releases This Week
+                </h3>
 
-            <input
-              type="email"
-              required
-              placeholder="Enter your email address"
-              aria-label="Email address"
-            >
+                <p>
+                  Discover what's new across popular
+                  streaming platforms.
+                </p>
 
-            <button
-              class="btn primary"
-              type="submit"
-            >
-              Subscribe
-            </button>
+              </div>
 
-          </form>
-
-          <small id="subscribeMsg"></small>
-
-        </section>
+            </article>
 
 
-        <!-- SOCIAL -->
+            <article class="news-item">
 
-        <section class="side-card">
+              <div class="news-thumb">
+                ⭐
+              </div>
 
-          <h2>
-            📱 Follow Us
-          </h2>
+              <div class="news-content">
 
-          <div class="social-list">
+                <span class="news-tag">
+                  Reviews
+                </span>
 
-            <a href="#">
-              <span>▶</span>
-              YouTube
-              <b>Subscribe →</b>
-            </a>
+                <h3>
+                  Movie Ratings & Audience Reviews
+                </h3>
 
-            <a href="#">
-              <span>◎</span>
-              Instagram
-              <b>Follow →</b>
-            </a>
+                <p>
+                  Check ratings and audience reactions
+                  before you watch.
+                </p>
 
-            <a href="#">
-              <span>➤</span>
-              Telegram
-              <b>Join Channel →</b>
-            </a>
+              </div>
+
+            </article>
 
           </div>
-
-        </section>
-
-
-        <!-- CATEGORIES -->
-
-        <section class="side-card">
-
-          <h2>
-            Popular Categories
-          </h2>
-
-          <div class="tags">
-
-            <button>
-              Bollywood
-            </button>
-
-            <button>
-              Hollywood
-            </button>
-
-            <button>
-              South Indian
-            </button>
-
-            <button>
-              Web Series
-            </button>
-
-            <button>
-              Netflix
-            </button>
-
-            <button>
-              Prime Video
-            </button>
-
-            <button>
-              JioHotstar
-            </button>
-
-            <button>
-              ZEE5
-            </button>
-
-            <button>
-              SonyLIV
-            </button>
-
-          </div>
-
-        </section>
-
-      </aside>
-
-    </div>
-
-
-    <!-- =========================
-         CTA
-    ========================== -->
-
-    <section class="container cta">
-
-      <div>
-
-        <span class="brand-icon">
-          🎬
-        </span>
-
-        <div>
-
-          <h2>
-            Stay Updated with FilmyRadarIndia
-          </h2>
-
-          <p>
-            Movies • Series • OTT • Reviews • News
-          </p>
 
         </div>
 
       </div>
 
-      <div class="cta-buttons">
+    </section>
 
-        <a
-          class="btn primary"
-          href="#"
-        >
-          ◎ Follow on Instagram
-        </a>
 
-        <a
-          class="btn ghost"
-          href="#"
+    <!-- =========================
+         NEWSLETTER
+    ========================= -->
+
+    <section class="newsletter">
+
+      <div class="container newsletter-inner">
+
+        <div>
+
+          <span class="section-label">
+            FILMYRADARINDIA
+          </span>
+
+          <h2>
+            Never Miss A Release
+          </h2>
+
+          <p>
+            Get movie, OTT and web series updates.
+          </p>
+
+        </div>
+
+
+        <form
+          id="subscribeForm"
         >
-          ➤ Join Telegram
-        </a>
+
+          <input
+            type="email"
+            placeholder="Enter your email"
+            required
+          >
+
+          <button
+            type="submit"
+            class="btn primary"
+          >
+            Subscribe
+          </button>
+
+        </form>
+
+
+        <p
+          class="subscribe-msg"
+          id="subscribeMsg"
+        ></p>
 
       </div>
 
@@ -812,62 +1596,59 @@
 
   <!-- =========================
        FOOTER
-  ========================== -->
+  ========================= -->
 
-  <footer>
+  <footer class="footer">
 
     <div class="container footer-grid">
 
-
-      <div class="footer-brand">
+      <div>
 
         <a
-          class="brand"
-          href="#home"
+          href="#"
+          class="logo"
         >
-
-          <span class="brand-icon">
-            🎬
-          </span>
-
-          <span>
-
-            <b>
-              FilmyRadar
-            </b>
-
-            <em>
-              India
-            </em>
-
-            <small>
-              Your Ultimate Movie & OTT Guide
-            </small>
-
-          </span>
-
+          🎬 FilmyRadar<span>India</span>
         </a>
+
+        <p>
+          Your destination for movies, OTT releases,
+          web series, reviews and entertainment updates.
+        </p>
 
       </div>
 
 
-      <div class="footer-links">
+      <div>
 
-        <a href="#home">
-          Home
-        </a>
+        <h3>
+          Explore
+        </h3>
 
         <a href="#movies">
           Movies
         </a>
 
         <a href="#ott">
-          OTT Releases
+          OTT
         </a>
 
         <a href="#series">
           Web Series
         </a>
+
+        <a href="#upcoming">
+          Upcoming
+        </a>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          Information
+        </h3>
 
         <a href="#reviews">
           Reviews
@@ -877,12 +1658,8 @@
           News
         </a>
 
-        <a href="#upcoming">
-          Upcoming
-        </a>
-
         <a href="#">
-          About Us
+          Privacy Policy
         </a>
 
         <a href="#">
@@ -891,44 +1668,34 @@
 
       </div>
 
+    </div>
 
-      <div class="copyright">
 
-        © 2026 FilmyRadarIndia.
-        All rights reserved.
+    <div class="container footer-bottom">
 
-        <br>
+      <p>
+        © 2026 FilmyRadarIndia. All rights reserved.
+      </p>
 
-        <a href="#">
-          Privacy Policy
-        </a>
-
-        ·
-
-        <a href="#">
-          Disclaimer
-        </a>
-
-      </div>
+      <p>
+        Movie data powered by TMDB.
+      </p>
 
     </div>
 
   </footer>
 
 
-  <!-- TOAST -->
+  <!-- Toast -->
 
   <div
     class="toast"
     id="toast"
-    role="status"
-    aria-live="polite"
   ></div>
 
-
-  <!-- JAVASCRIPT -->
 
   <script src="script.js"></script>
 
 </body>
+
 </html>
