@@ -1,4 +1,3 @@
-```javascript
 /*
   FILMYRADARINDIA
   Upgraded frontend script
@@ -1119,4 +1118,3 @@ console.log(
 console.log(
   `📚 ${allTitles.length} titles loaded.`
 );
-```
