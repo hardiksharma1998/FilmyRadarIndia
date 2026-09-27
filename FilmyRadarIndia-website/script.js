@@ -1,65 +1,569 @@
-const movies=[
-  {title:"War 2",tag:"Bollywood",date:"14 Aug 2025",rating:"7.2",c1:"#263b4c",c2:"#0b1627"},
-  {title:"Coolie",tag:"South",date:"14 Aug 2025",rating:"7.8",c1:"#6d321e",c2:"#16120e"},
-  {title:"Saiyaara",tag:"Bollywood",date:"18 Jul 2025",rating:"8.1",c1:"#344f63",c2:"#321c2c"},
-  {title:"The Conjuring",tag:"Hollywood",date:"05 Sep 2025",rating:"7.0",c1:"#182b2e",c2:"#080b12"}
-];
-const ott=[
-  {title:"The Family Man S3",tag:"Prime Video",date:"18 Jul 2026",rating:"8.8",c1:"#1b455a",c2:"#0b111c"},
-  {title:"Squid Game S3",tag:"Netflix",date:"27 Jun 2026",rating:"8.0",c1:"#26564e",c2:"#241c3d"},
-  {title:"Housefull 5",tag:"JioHotstar",date:"06 Jun 2026",rating:"6.8",c1:"#795c31",c2:"#281b17"},
-  {title:"Kuberaa",tag:"Netflix",date:"27 Jun 2026",rating:"7.5",c1:"#314b4b",c2:"#111820"}
-];
-const series=[
-  {title:"Panchayat S4",tag:"Prime Video",date:"24 Jun 2026",rating:"8.6",c1:"#6b5728",c2:"#233323"},
-  {title:"The Old Guard 2",tag:"Netflix",date:"02 Jul 2026",rating:"7.0",c1:"#26394c",c2:"#10131c"},
-  {title:"Mirzapur",tag:"Prime Video",date:"Coming Soon",rating:"8.2",c1:"#5b2921",c2:"#11110e"},
-  {title:"Squid Game S3",tag:"Netflix",date:"27 Jun 2026",rating:"8.0",c1:"#244e47",c2:"#28193b"}
-];
-const upcoming=[
-  {title:"Kantara Chapter 1",tag:"South",date:"02 Oct 2026",rating:"—",c1:"#713b20",c2:"#15110d"},
-  {title:"Dhurandhar",tag:"Bollywood",date:"06 Dec 2026",rating:"—",c1:"#4a4b45",c2:"#10151b"},
-  {title:"The Raja Saab",tag:"South",date:"06 Dec 2026",rating:"—",c1:"#693f67",c2:"#141426"},
-  {title:"Pushpa 2 Re-Release",tag:"South",date:"05 Oct 2026",rating:"—",c1:"#70471f",c2:"#17140d"}
-];
-const news=[
-  ["OTT RELEASES THIS WEEK","This Week on OTT: 5 Must-Watch Releases","25 Sep 2026"],
-  ["TOP PICKS","Top 10 Underrated Indian Movies You Should Watch","23 Sep 2026"],
-  ["BOLLYWOOD","Upcoming Bollywood Movies — Full List","20 Sep 2026"],
-  ["REVIEWS","What to Watch This Weekend? Our Latest Picks","18 Sep 2026"]
+/*
+  FILMYRADARINDIA
+  Current content: September 2026
+*/
+
+const movies = [
+
+  {
+    title: "UNABOMBER",
+    tag: "Netflix",
+    category: "Hollywood",
+    date: "Sep 2026",
+    rating: "—",
+    image: "https://occ-0-7977-2774.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABZaqthoMMZj-YgtRmNNSg4nqtB4gVOyFb47vITtrSTvFTPI6m2pWg2kmHgtpoX2PRxi30jBRHiC2ecphoka7YJE6LRVEGkexIUTB.jpg?r=5f2"
+  },
+
+  {
+    title: "The Love Hypothesis",
+    tag: "Prime Video",
+    category: "Hollywood",
+    date: "23 Sep 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "Don't Be Shy",
+    tag: "Prime Video",
+    category: "Bollywood",
+    date: "25 Sep 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "Toxic: A Fairy Tale for Grown-Ups",
+    tag: "ZEE5",
+    category: "South",
+    date: "25 Sep 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  }
+
 ];
 
-function card(x){
- return `<article class="movie-card searchable" data-title="${x.title} ${x.tag}">
-   <div class="poster" style="--c1:${x.c1};--c2:${x.c2}">
-     <span class="badge">${x.tag}</span><span class="rating">${x.rating!=="—"?"⭐ "+x.rating:"UPCOMING"}</span>
-     <span class="poster-title">${x.title}</span>
-   </div>
-   <div class="card-meta"><h3>${x.title}</h3><p>${x.date} · <span class="star">${x.rating!=="—"?"★ "+x.rating:"Coming Soon"}</span></p></div>
- </article>`;
+
+const ott = [
+
+  {
+    title: "Shaque: Trust No One",
+    tag: "Netflix",
+    category: "Web Series",
+    date: "24 Sep 2026",
+    rating: "—",
+    image: "https://occ-0-7977-2774.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABZaqthoMMZj-YgtRmNNSg4nqtB4gVOyFb47vITtrSTvFTPI6m2pWg2kmHgtpoX2PRxi30jBRHiC2ecphoka7YJE6LRVEGkexIUTB.jpg?r=5f2"
+  },
+
+  {
+    title: "Hunkkaar: The Roar",
+    tag: "JioHotstar",
+    category: "Hindi",
+    date: "25 Sep 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "Don't Be Shy",
+    tag: "Prime Video",
+    category: "Hindi",
+    date: "25 Sep 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "Mango Pachcha",
+    tag: "JioHotstar",
+    category: "Kannada",
+    date: "25 Sep 2026",
+    rating: "8.8",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "The Love Hypothesis",
+    tag: "Prime Video",
+    category: "English",
+    date: "23 Sep 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  }
+
+];
+
+
+const series = [
+
+  {
+    title: "Shaque: Trust No One",
+    tag: "Netflix",
+    category: "Mystery Thriller",
+    date: "24 Sep 2026",
+    rating: "—",
+    image: "https://occ-0-7977-2774.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABZaqthoMMZj-YgtRmNNSg4nqtB4gVOyFb47vITtrSTvFTPI6m2pWg2kmHgtpoX2PRxi30jBRHiC2ecphoka7YJE6LRVEGkexIUTB.jpg?r=5f2"
+  },
+
+  {
+    title: "Hunkkaar: The Roar",
+    tag: "JioHotstar",
+    category: "Crime Thriller",
+    date: "25 Sep 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "UNABOMBER",
+    tag: "Netflix",
+    category: "Crime Drama",
+    date: "2026",
+    rating: "—",
+    image: "https://occ-0-7977-2774.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABZaqthoMMZj-YgtRmNNSg4nqtB4gVOyFb47vITtrSTvFTPI6m2pWg2kmHgtpoX2PRxi30jBRHiC2ecphoka7YJE6LRVEGkexIUTB.jpg?r=5f2"
+  },
+
+  {
+    title: "Rise & Fall Season 2",
+    tag: "JioHotstar",
+    category: "Reality",
+    date: "Sep 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  }
+
+];
+
+
+const upcoming = [
+
+  {
+    title: "Kantara: Chapter 1",
+    tag: "South",
+    category: "Kannada",
+    date: "Upcoming 2026",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "Dhurandhar",
+    tag: "Bollywood",
+    category: "Hindi",
+    date: "Upcoming",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "The Raja Saab",
+    tag: "South",
+    category: "Telugu",
+    date: "Upcoming",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  },
+
+  {
+    title: "Toxic",
+    tag: "South",
+    category: "Kannada",
+    date: "Upcoming",
+    rating: "—",
+    image: "https://image.tmdb.org/t/p/w780/placeholder.jpg"
+  }
+
+];
+
+
+const news = [
+
+  [
+    "OTT THIS WEEK",
+    "New OTT Releases: Shaque, Hunkkaar, Don't Be Shy & More",
+    "27 Sep 2026"
+  ],
+
+  [
+    "NETFLIX",
+    "Shaque: Trust No One — Everything You Need To Know",
+    "27 Sep 2026"
+  ],
+
+  [
+    "JIOHOTSTAR",
+    "Hunkkaar: The Roar Now Streaming on JioHotstar",
+    "27 Sep 2026"
+  ],
+
+  [
+    "PRIME VIDEO",
+    "The Love Hypothesis and Don't Be Shy Arrive on Prime Video",
+    "27 Sep 2026"
+  ]
+
+];
+
+
+function card(x) {
+
+  const rating =
+    x.rating !== "—"
+      ? `⭐ ${x.rating}`
+      : "NEW";
+
+  return `
+
+    <article
+      class="movie-card searchable"
+      data-title="${x.title} ${x.tag} ${x.category}"
+    >
+
+      <div
+        class="poster"
+        style="
+          --c1:#162033;
+          --c2:#05070c;
+          background-image:
+          linear-gradient(
+            180deg,
+            rgba(0,0,0,.05) 20%,
+            rgba(0,0,0,.92) 100%
+          ),
+          url('${x.image}');
+          background-size:cover;
+          background-position:center;
+        "
+      >
+
+        <span class="badge">
+          ${x.tag}
+        </span>
+
+        <span class="rating">
+          ${rating}
+        </span>
+
+        <span class="poster-title">
+          ${x.title}
+        </span>
+
+      </div>
+
+      <div class="card-meta">
+
+        <h3>${x.title}</h3>
+
+        <p>
+          ${x.date}
+          ·
+          <span class="star">
+            ${x.rating !== "—" ? `★ ${x.rating}` : "New Release"}
+          </span>
+        </p>
+
+      </div>
+
+    </article>
+
+  `;
 }
-function render(id,data){document.getElementById(id).innerHTML=data.map(card).join("")}
-render("movieGrid",movies);render("ottGrid",ott);render("seriesGrid",series);render("upcomingGrid",upcoming);
 
-document.getElementById("newsList").innerHTML=news.map(n=>`<article class="news-item searchable" data-title="${n[0]} ${n[1]}"><div class="news-thumb">${n[0]}</div><div><span>${n[2]} · FILMYRADAR</span><h3>${n[1]}</h3><p>Latest entertainment update, release information and what-to-watch details.</p></div></article>`).join("");
 
-const trending=[["The Family Man S3","Web Series · Prime Video"],["War 2","Movie · Bollywood"],["Coolie","Movie · South"],["Squid Game S3","Web Series · Netflix"],["The Old Guard 2","Movie · Netflix"]];
-document.getElementById("trendingList").innerHTML=trending.map((x,i)=>`<div class="trend"><span class="trend-num">${i+1}</span><span class="mini-poster">🎬</span><span><b>${x[0]}</b><small>${x[1]}</small></span></div>`).join("");
+function render(id, data) {
 
-const menuBtn=document.getElementById("menuBtn"), nav=document.getElementById("mainNav");
-menuBtn.onclick=()=>nav.classList.toggle("open");
-document.querySelectorAll("#mainNav a").forEach(a=>a.onclick=()=>nav.classList.remove("open"));
+  const element = document.getElementById(id);
 
-const searchBtn=document.getElementById("searchBtn"), searchBar=document.getElementById("searchBar"), input=document.getElementById("searchInput");
-searchBtn.onclick=()=>{searchBar.classList.toggle("open");if(searchBar.classList.contains("open"))input.focus()};
-document.getElementById("clearSearch").onclick=()=>{input.value="";filter("")};
-function filter(q){
- const all=document.querySelectorAll(".searchable");let found=0;
- all.forEach(el=>{const ok=el.dataset.title.toLowerCase().includes(q.toLowerCase());el.style.display=ok?"":"none";if(ok)found++});
+  if (!element) return;
+
+  element.innerHTML = data
+    .map(card)
+    .join("");
+
 }
-input.addEventListener("input",e=>filter(e.target.value));
 
-const toast=document.getElementById("toast");
-function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),2500)}
-document.getElementById("subscribeForm").onsubmit=e=>{e.preventDefault();showToast("Thanks! You’re subscribed to FilmyRadarIndia.");e.target.reset();document.getElementById("subscribeMsg").textContent="Subscription received ✓"};
-document.querySelectorAll(".tags button").forEach(b=>b.onclick=()=>{document.getElementById("searchBar").classList.add("open");input.value=b.textContent;filter(b.textContent)});
+
+render("movieGrid", movies);
+render("ottGrid", ott);
+render("seriesGrid", series);
+render("upcomingGrid", upcoming);
+
+
+
+/* NEWS */
+
+document.getElementById("newsList").innerHTML = news
+  .map(n => {
+
+    return `
+
+      <article
+        class="news-item searchable"
+        data-title="${n[0]} ${n[1]}"
+      >
+
+        <div class="news-thumb">
+          ${n[0]}
+        </div>
+
+        <div>
+
+          <span>
+            ${n[2]} · FILMYRADAR
+          </span>
+
+          <h3>
+            ${n[1]}
+          </h3>
+
+          <p>
+            Latest entertainment update,
+            OTT information and
+            what-to-watch details.
+          </p>
+
+        </div>
+
+      </article>
+
+    `;
+
+  })
+  .join("");
+
+
+
+/* TRENDING */
+
+const trending = [
+
+  [
+    "Shaque: Trust No One",
+    "Netflix · Thriller"
+  ],
+
+  [
+    "Hunkkaar: The Roar",
+    "JioHotstar · Crime"
+  ],
+
+  [
+    "UNABOMBER",
+    "Netflix · Crime Drama"
+  ],
+
+  [
+    "Don't Be Shy",
+    "Prime Video · Drama"
+  ],
+
+  [
+    "The Love Hypothesis",
+    "Prime Video · Romance"
+  ]
+
+];
+
+
+document.getElementById("trendingList").innerHTML =
+  trending
+    .map((x, i) => {
+
+      return `
+
+        <div class="trend">
+
+          <span class="trend-num">
+            ${i + 1}
+          </span>
+
+          <span class="mini-poster">
+            🎬
+          </span>
+
+          <span>
+
+            <b>
+              ${x[0]}
+            </b>
+
+            <small>
+              ${x[1]}
+            </small>
+
+          </span>
+
+        </div>
+
+      `;
+
+    })
+    .join("");
+
+
+
+/* MOBILE MENU */
+
+const menuBtn =
+  document.getElementById("menuBtn");
+
+const nav =
+  document.getElementById("mainNav");
+
+
+if (menuBtn) {
+
+  menuBtn.onclick = () => {
+
+    nav.classList.toggle("open");
+
+  };
+
+}
+
+
+document
+  .querySelectorAll("#mainNav a")
+  .forEach(a => {
+
+    a.onclick = () => {
+
+      nav.classList.remove("open");
+
+    };
+
+  });
+
+
+
+/* SEARCH */
+
+const searchBtn =
+  document.getElementById("searchBtn");
+
+const searchBar =
+  document.getElementById("searchBar");
+
+const input =
+  document.getElementById("searchInput");
+
+const clearSearch =
+  document.getElementById("clearSearch");
+
+
+if (searchBtn) {
+
+  searchBtn.onclick = () => {
+
+    searchBar.classList.toggle("open");
+
+    if (searchBar.classList.contains("open")) {
+
+      input.focus();
+
+    }
+
+  };
+
+}
+
+
+function filter(q) {
+
+  const query =
+    q.toLowerCase().trim();
+
+  const all =
+    document.querySelectorAll(".searchable");
+
+  all.forEach(el => {
+
+    const title =
+      el.dataset.title.toLowerCase();
+
+    el.style.display =
+      title.includes(query)
+        ? ""
+        : "none";
+
+  });
+
+}
+
+
+input.addEventListener(
+  "input",
+  e => filter(e.target.value)
+);
+
+
+clearSearch.onclick = () => {
+
+  input.value = "";
+
+  filter("");
+
+};
+
+
+
+/* CATEGORY FILTER */
+
+document
+  .querySelectorAll(".tags button")
+  .forEach(button => {
+
+    button.onclick = () => {
+
+      searchBar.classList.add("open");
+
+      input.value =
+        button.textContent.trim();
+
+      filter(input.value);
+
+    };
+
+  });
+
+
+
+/* SUBSCRIBE */
+
+const toast =
+  document.getElementById("toast");
+
+
+function showToast(message) {
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  setTimeout(() => {
+
+    toast.classList.remove("show");
+
+  }, 2500);
+
+}
+
+
+document
+  .getElementById("subscribeForm")
+  .onsubmit = event => {
+
+    event.preventDefault();
+
+    showToast(
+      "Thanks! You're subscribed to FilmyRadarIndia."
+    );
+
+    event.target.reset();
+
+    document.getElementById(
+      "subscribeMsg"
+    ).textContent =
+      "Subscription received ✓";
+
+  };
