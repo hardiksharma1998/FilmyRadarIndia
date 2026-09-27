@@ -3,69 +3,110 @@ const API = "/api/tmdb";
 const FALLBACK_IMAGE =
   "https://placehold.co/500x750/0b1524/f5f8ff?text=No+Poster";
 
+
 const state = {
+
   trending: [],
   movies: [],
   ott: [],
   series: [],
   upcoming: [],
   searchResults: []
+
 };
+
 
 /* =========================
    API
 ========================= */
 
-async function getData(action, query = "") {
-  try {
-    let url = `${API}?action=${encodeURIComponent(action)}`;
+async function getData(
+  action,
+  query = ""
+){
 
-    if (query.trim()) {
-      url += `&query=${encodeURIComponent(query.trim())}`;
+  try{
+
+    let url =
+      `${API}?action=${encodeURIComponent(action)}`;
+
+    if(query.trim()){
+
+      url +=
+        `&query=${encodeURIComponent(query.trim())}`;
+
     }
 
-    const response = await fetch(url);
+    const response =
+      await fetch(url);
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+    if(!response.ok){
+
+      throw new Error(
+        `API Error: ${response.status}`
+      );
+
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
-    if (data.error) {
+    if(data.error){
+
       throw new Error(data.error);
+
     }
 
     return Array.isArray(data.results)
       ? data.results
       : [];
-  } catch (error) {
-    console.error(`Failed to load ${action}:`, error);
+
+  }catch(error){
+
+    console.error(
+      `Failed to load ${action}:`,
+      error
+    );
+
     return [];
+
   }
+
 }
+
 
 /* =========================
    HELPERS
 ========================= */
 
-function posterUrl(path) {
-  if (!path) {
+function posterUrl(path){
+
+  if(!path){
+
     return FALLBACK_IMAGE;
+
   }
 
   return `https://image.tmdb.org/t/p/w500${path}`;
+
 }
 
-function backdropUrl(path) {
-  if (!path) {
+
+function backdropUrl(path){
+
+  if(!path){
+
     return "";
+
   }
 
   return `https://image.tmdb.org/t/p/w1280${path}`;
+
 }
 
-function titleOf(item) {
+
+function titleOf(item){
+
   return (
     item.title ||
     item.name ||
@@ -73,79 +114,133 @@ function titleOf(item) {
     item.original_name ||
     "Untitled"
   );
+
 }
 
-function releaseDate(item) {
+
+function releaseDate(item){
+
   return (
     item.release_date ||
     item.first_air_date ||
     ""
   );
+
 }
 
-function formatDate(date) {
-  if (!date) {
+
+function formatDate(date){
+
+  if(!date){
+
     return "Coming Soon";
+
   }
 
-  const d = new Date(date);
+  const d =
+    new Date(date);
 
-  if (Number.isNaN(d.getTime())) {
+  if(Number.isNaN(d.getTime())){
+
     return date;
+
   }
 
-  return d.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  });
+  return d.toLocaleDateString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"short",
+      year:"numeric"
+    }
+  );
+
 }
 
-function ratingOf(item) {
-  const rating = Number(item.vote_average || 0);
+
+function ratingOf(item){
+
+  const rating =
+    Number(item.vote_average || 0);
 
   return rating > 0
     ? rating.toFixed(1)
     : "N/A";
+
 }
 
-function typeOf(item) {
-  if (
+
+function typeOf(item){
+
+  if(
     item.media_type === "tv" ||
     item.first_air_date
-  ) {
+  ){
+
     return "Series";
+
   }
 
   return "Movie";
+
 }
 
-function escapeHtml(value) {
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+
+function mediaTypeOf(item){
+
+  return (
+    item.media_type ||
+    (
+      typeOf(item) === "Series"
+        ? "tv"
+        : "movie"
+    )
+  );
+
 }
+
+
+function escapeHtml(value){
+
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
 
 /* =========================
    MOVIE CARD
 ========================= */
 
-function movieCard(item) {
-  const title = escapeHtml(titleOf(item));
-  const rating = ratingOf(item);
-  const date = formatDate(releaseDate(item));
-  const type = typeOf(item);
-  const poster = posterUrl(item.poster_path);
+function movieCard(item){
 
-  const id = item.id || "";
+  const title =
+    escapeHtml(titleOf(item));
+
+  const rating =
+    ratingOf(item);
+
+  const date =
+    formatDate(releaseDate(item));
+
+  const type =
+    typeOf(item);
+
+  const poster =
+    posterUrl(item.poster_path);
+
+  const id =
+    item.id || "";
+
   const mediaType =
-    item.media_type ||
-    (type === "Series" ? "tv" : "movie");
+    mediaTypeOf(item);
 
   return `
+
     <article
       class="movie-card clickable-card"
       data-id="${id}"
@@ -160,18 +255,18 @@ function movieCard(item) {
         style="
           background-image:
             url('${poster}');
-          background-size: cover;
-          background-position: center;
+          background-size:cover;
+          background-position:center;
         "
       >
 
         <div class="poster-overlay"></div>
 
-        <div class="poster-content">
+        <span class="badge">
+          ${type}
+        </span>
 
-          <span class="badge">
-            ${type}
-          </span>
+        <div class="poster-content">
 
           <h3>
             ${title}
@@ -192,6 +287,7 @@ function movieCard(item) {
         </div>
 
       </div>
+
 
       <div class="movie-info">
 
@@ -214,134 +310,169 @@ function movieCard(item) {
       </div>
 
     </article>
+
   `;
+
 }
+
 
 /* =========================
    GRID
 ========================= */
 
-function renderGrid(id, items, limit = 8) {
+function renderGrid(
+  id,
+  items,
+  limit = 8
+){
+
   const container =
     document.getElementById(id);
 
-  if (!container) {
+  if(!container){
+
     return;
+
   }
 
-  if (!items || !items.length) {
+  if(!items || !items.length){
+
     container.innerHTML = `
+
       <div class="empty-state">
+
         No content available right now.
+
       </div>
+
     `;
 
     return;
+
   }
 
-  container.innerHTML = items
-    .slice(0, limit)
-    .map(movieCard)
-    .join("");
+  container.innerHTML =
+    items
+      .slice(0,limit)
+      .map(movieCard)
+      .join("");
+
 }
+
 
 /* =========================
    TRENDING
 ========================= */
 
-function renderTrending(items) {
-  const container =
-    document.getElementById("trendingList");
+function renderTrending(items){
 
-  if (!container) {
+  const container =
+    document.getElementById(
+      "trendingList"
+    );
+
+  if(!container){
+
     return;
+
   }
 
-  const validItems = items
-    .filter(item => item.poster_path)
-    .slice(0, 7);
+  const validItems =
+    items
+      .filter(item => item.poster_path)
+      .slice(0,7);
 
-  if (!validItems.length) {
+  if(!validItems.length){
+
     container.innerHTML = `
+
       <p class="empty-state">
         Trending content unavailable.
       </p>
+
     `;
 
     return;
+
   }
 
-  container.innerHTML = validItems
-    .map((item, index) => {
+  container.innerHTML =
+    validItems
+      .map((item,index)=>{
 
-      const title =
-        escapeHtml(titleOf(item));
+        const title =
+          escapeHtml(titleOf(item));
 
-      const rating =
-        ratingOf(item);
+        const rating =
+          ratingOf(item);
 
-      const poster =
-        posterUrl(item.poster_path);
+        const poster =
+          posterUrl(item.poster_path);
 
-      const id =
-        item.id || "";
+        const id =
+          item.id || "";
 
-      const mediaType =
-        item.media_type ||
-        (typeOf(item) === "Series"
-          ? "tv"
-          : "movie");
+        const mediaType =
+          mediaTypeOf(item);
 
-      return `
-        <div
-          class="trending-item clickable-card"
-          data-id="${id}"
-          data-media-type="${mediaType}"
-          tabindex="0"
-          role="button"
-          aria-label="View ${title}"
-        >
-
-          <div class="trend-number">
-            ${String(index + 1).padStart(2, "0")}
-          </div>
+        return `
 
           <div
-            class="mini-poster"
-            style="
-              background-image:
-                url('${poster}');
-              background-size: cover;
-              background-position: center;
-            "
-          ></div>
+            class="trending-item clickable-card"
+            data-id="${id}"
+            data-media-type="${mediaType}"
+            tabindex="0"
+            role="button"
+            aria-label="View ${title}"
+          >
 
-          <div class="trend-info">
+            <div class="trend-number">
 
-            <h3>
-              ${title}
-            </h3>
+              ${String(index + 1).padStart(2,"0")}
 
-            <p>
-              ⭐ ${rating}
-              · ${typeOf(item)}
-            </p>
+            </div>
+
+            <div
+              class="mini-poster"
+              style="
+                background-image:
+                  url('${poster}');
+              "
+            ></div>
+
+            <div class="trend-info">
+
+              <h3>
+                ${title}
+              </h3>
+
+              <p>
+                ⭐ ${rating}
+                · ${typeOf(item)}
+              </p>
+
+            </div>
 
           </div>
 
-        </div>
-      `;
-    })
-    .join("");
+        `;
+
+      })
+      .join("");
+
 }
+
 
 /* =========================
    HERO
 ========================= */
 
-function updateHero(items) {
-  if (!items || !items.length) {
+function updateHero(items){
+
+  if(!items || !items.length){
+
     return;
+
   }
 
   const heroTitle =
@@ -374,31 +505,39 @@ function updateHero(items) {
       x =>
         x.backdrop_path ||
         x.poster_path
-    ) || items[0];
+    ) ||
+    items[0];
 
   const title =
     titleOf(item);
 
-  if (heroTitle) {
+  if(heroTitle){
+
     heroTitle.textContent =
       title;
+
   }
 
-  if (heroSubtitle) {
+  if(heroSubtitle){
+
     heroSubtitle.textContent =
       `${typeOf(item)} • ⭐ ${ratingOf(item)}`;
+
   }
 
-  if (heroText) {
+  if(heroText){
+
     heroText.textContent =
       item.overview ||
       "Discover the latest movies, web series, OTT releases and trending entertainment on FilmyRadarIndia.";
+
   }
 
-  if (
+  if(
     heroPoster &&
     item.poster_path
-  ) {
+  ){
+
     heroPoster.style.backgroundImage =
       `url('${posterUrl(item.poster_path)}')`;
 
@@ -407,12 +546,14 @@ function updateHero(items) {
 
     heroPoster.style.backgroundPosition =
       "center";
+
   }
 
-  if (
+  if(
     heroArt &&
     item.backdrop_path
-  ) {
+  ){
+
     heroArt.style.backgroundImage =
       `
       linear-gradient(
@@ -427,21 +568,27 @@ function updateHero(items) {
 
     heroArt.style.backgroundPosition =
       "center";
+
   }
+
 }
+
 
 /* =========================
    NEWS
 ========================= */
 
-function renderNews(items) {
+function renderNews(items){
+
   const container =
     document.getElementById(
       "newsList"
     );
 
-  if (!container) {
+  if(!container){
+
     return;
+
   }
 
   const newsItems =
@@ -449,31 +596,23 @@ function renderNews(items) {
       .filter(
         item => item.poster_path
       )
-      .slice(0, 5);
+      .slice(0,5);
 
-  if (!newsItems.length) {
-    container.innerHTML = `
-      <div class="empty-state">
-        No latest updates available.
-      </div>
-    `;
+  if(!newsItems.length){
 
     return;
+
   }
 
   container.innerHTML =
     newsItems
-      .map(item => {
+      .map(item=>{
 
         const title =
-          escapeHtml(
-            titleOf(item)
-          );
+          escapeHtml(titleOf(item));
 
         const poster =
-          posterUrl(
-            item.poster_path
-          );
+          posterUrl(item.poster_path);
 
         const date =
           formatDate(
@@ -484,12 +623,10 @@ function renderNews(items) {
           item.id || "";
 
         const mediaType =
-          item.media_type ||
-          (typeOf(item) === "Series"
-            ? "tv"
-            : "movie");
+          mediaTypeOf(item);
 
         return `
+
           <article
             class="news-item clickable-card"
             data-id="${id}"
@@ -503,8 +640,6 @@ function renderNews(items) {
               style="
                 background-image:
                   url('${poster}');
-                background-size: cover;
-                background-position: center;
               "
             ></div>
 
@@ -526,40 +661,54 @@ function renderNews(items) {
             </div>
 
           </article>
+
         `;
+
       })
       .join("");
+
 }
+
 
 /* =========================
    LOADING
 ========================= */
 
-function showLoading(ids) {
-  ids.forEach(id => {
+function showLoading(ids){
+
+  ids.forEach(id=>{
 
     const container =
       document.getElementById(id);
 
-    if (!container) {
+    if(!container){
+
       return;
+
     }
 
     container.innerHTML = `
+
       <div class="loading-state">
+
         <span>
           Loading...
         </span>
+
       </div>
+
     `;
+
   });
+
 }
+
 
 /* =========================
    HOMEPAGE
 ========================= */
 
-async function loadHomepage() {
+async function loadHomepage(){
 
   console.log(
     "🎬 FilmyRadarIndia loading..."
@@ -575,11 +724,13 @@ async function loadHomepage() {
   ]);
 
   const [
+
     trending,
     movies,
     ott,
     series,
     upcoming
+
   ] = await Promise.all([
 
     getData("trending"),
@@ -609,82 +760,71 @@ async function loadHomepage() {
   state.upcoming =
     upcoming;
 
-  console.log(
-    "🔥 Trending:",
-    trending
-  );
-
-  console.log(
-    "🎬 Movies:",
-    movies
-  );
-
-  console.log(
-    "📺 OTT:",
-    ott
-  );
-
-  console.log(
-    "🎞️ Series:",
-    series
-  );
-
-  console.log(
-    "📅 Upcoming:",
-    upcoming
-  );
 
   renderGrid(
     "movieGrid",
     movies
   );
 
+
   renderGrid(
     "ottGrid",
     ott
   );
+
 
   renderGrid(
     "seriesGrid",
     series
   );
 
+
   renderGrid(
     "upcomingGrid",
     upcoming
   );
 
+
   renderTrending(
     trending
   );
 
+
   renderNews([
+
     ...movies,
     ...series,
     ...upcoming
+
   ]);
+
 
   updateHero(
     trending
   );
 
+
   console.log(
     "✅ FilmyRadarIndia loaded"
   );
+
 }
+
 
 /* =========================
    DETAILS MODAL
 ========================= */
 
-function createDetailsModal() {
+function createDetailsModal(){
 
-  if (
+  if(
     document.getElementById(
       "movieDetailsModal"
     )
-  ) {
+  ){
+
     return;
+
   }
 
   const modal =
@@ -697,10 +837,12 @@ function createDetailsModal() {
     "movie-modal";
 
   modal.innerHTML = `
+
     <div
       class="movie-modal-backdrop"
       data-close-modal
     ></div>
+
 
     <div
       class="movie-modal-content"
@@ -718,15 +860,14 @@ function createDetailsModal() {
         ×
       </button>
 
-      <div
-        class="movie-modal-hero"
-        id="movieModalHero"
-      >
+
+      <div class="movie-modal-hero">
 
         <div
           class="movie-modal-poster"
           id="movieModalPoster"
         ></div>
+
 
         <div
           class="movie-modal-info"
@@ -736,47 +877,55 @@ function createDetailsModal() {
       </div>
 
     </div>
+
   `;
+
 
   document.body.appendChild(modal);
 
-  const closeButton =
-    document.getElementById(
-      "movieModalClose"
+
+  document
+    .getElementById("movieModalClose")
+    .addEventListener(
+      "click",
+      closeMovieModal
     );
 
-  closeButton.addEventListener(
-    "click",
-    closeMovieModal
-  );
 
   modal.addEventListener(
     "click",
-    event => {
+    event=>{
 
-      if (
-        event.target.dataset
-          .closeModal !== undefined
-      ) {
+      if(
+        event.target.dataset.closeModal !==
+        undefined
+      ){
+
         closeMovieModal();
+
       }
 
     }
   );
+
 
   document.addEventListener(
     "keydown",
-    event => {
+    event=>{
 
-      if (
+      if(
         event.key === "Escape"
-      ) {
+      ){
+
         closeMovieModal();
+
       }
 
     }
   );
+
 }
+
 
 /* =========================
    OPEN DETAILS
@@ -785,22 +934,28 @@ function createDetailsModal() {
 function openMovieDetails(
   id,
   mediaType
-) {
+){
 
-  if (!id) {
+  if(!id){
+
     return;
+
   }
 
   createDetailsModal();
 
+
   const allItems = [
+
     ...state.trending,
     ...state.movies,
     ...state.ott,
     ...state.series,
     ...state.upcoming,
     ...state.searchResults
+
   ];
+
 
   const item =
     allItems.find(
@@ -809,29 +964,37 @@ function openMovieDetails(
         String(id)
     );
 
-  if (!item) {
+
+  if(!item){
+
     return;
+
   }
+
 
   const modal =
     document.getElementById(
       "movieDetailsModal"
     );
 
+
   const poster =
     document.getElementById(
       "movieModalPoster"
     );
+
 
   const info =
     document.getElementById(
       "movieModalInfo"
     );
 
+
   const title =
     escapeHtml(
       titleOf(item)
     );
+
 
   const overview =
     escapeHtml(
@@ -839,46 +1002,46 @@ function openMovieDetails(
       "No overview available for this title yet."
     );
 
+
   const rating =
     ratingOf(item);
+
 
   const date =
     formatDate(
       releaseDate(item)
     );
 
+
   const type =
     typeOf(item);
 
+
   const backdrop =
     item.backdrop_path
-      ? backdropUrl(
-          item.backdrop_path
-        )
-      : posterUrl(
-          item.poster_path
-        );
+      ? backdropUrl(item.backdrop_path)
+      : posterUrl(item.poster_path);
+
 
   poster.style.backgroundImage =
-    `url('${posterUrl(
-      item.poster_path
-    )}')`;
+    `url('${posterUrl(item.poster_path)}')`;
 
-  poster.style.backgroundSize =
-    "cover";
-
-  poster.style.backgroundPosition =
-    "center";
 
   info.innerHTML = `
 
     <span class="movie-modal-badge">
+
       ${type}
+
     </span>
 
+
     <h2>
+
       ${title}
+
     </h2>
+
 
     <div class="movie-modal-meta">
 
@@ -892,9 +1055,13 @@ function openMovieDetails(
 
     </div>
 
+
     <p class="movie-modal-overview">
+
       ${overview}
+
     </p>
+
 
     <div class="movie-modal-actions">
 
@@ -907,7 +1074,9 @@ function openMovieDetails(
       </button>
 
     </div>
+
   `;
+
 
   info
     .querySelector(
@@ -918,10 +1087,12 @@ function openMovieDetails(
       closeMovieModal
     );
 
+
   const modalContent =
     modal.querySelector(
       ".movie-modal-content"
     );
+
 
   modalContent.style.backgroundImage =
     `
@@ -932,26 +1103,31 @@ function openMovieDetails(
     url('${backdrop}')
     `;
 
+
   modal.classList.add("open");
 
   document.body.classList.add(
     "modal-open"
   );
+
 }
+
 
 /* =========================
    CLOSE MODAL
 ========================= */
 
-function closeMovieModal() {
+function closeMovieModal(){
 
   const modal =
     document.getElementById(
       "movieDetailsModal"
     );
 
-  if (!modal) {
+  if(!modal){
+
     return;
+
   }
 
   modal.classList.remove(
@@ -961,92 +1137,104 @@ function closeMovieModal() {
   document.body.classList.remove(
     "modal-open"
   );
+
 }
 
+
 /* =========================
-   CARD CLICK HANDLER
+   CARD CLICKS
 ========================= */
 
-function setupCardClicks() {
+function setupCardClicks(){
 
   document.addEventListener(
     "click",
-    event => {
+    event=>{
 
       const card =
         event.target.closest(
           ".clickable-card"
         );
 
-      if (!card) {
+      if(!card){
+
         return;
+
       }
-
-      const id =
-        card.dataset.id;
-
-      const mediaType =
-        card.dataset.mediaType ||
-        "movie";
-
-      openMovieDetails(
-        id,
-        mediaType
-      );
-    }
-  );
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key !== "Enter" &&
-        event.key !== " "
-      ) {
-        return;
-      }
-
-      const card =
-        event.target.closest(
-          ".clickable-card"
-        );
-
-      if (!card) {
-        return;
-      }
-
-      event.preventDefault();
 
       openMovieDetails(
         card.dataset.id,
         card.dataset.mediaType ||
-          "movie"
+        "movie"
       );
+
     }
   );
+
+
+  document.addEventListener(
+    "keydown",
+    event=>{
+
+      if(
+        event.key !== "Enter" &&
+        event.key !== " "
+      ){
+
+        return;
+
+      }
+
+      const card =
+        event.target.closest(
+          ".clickable-card"
+        );
+
+      if(!card){
+
+        return;
+
+      }
+
+      event.preventDefault();
+
+
+      openMovieDetails(
+        card.dataset.id,
+        card.dataset.mediaType ||
+        "movie"
+      );
+
+    }
+  );
+
 }
+
 
 /* =========================
    SEARCH
 ========================= */
 
-async function performSearch(
-  query
-) {
+async function performSearch(query){
 
   const value =
     query.trim();
 
-  if (!value) {
+
+  if(!value){
+
     await loadHomepage();
+
     return;
+
   }
+
 
   console.log(
     "🔎 Searching:",
     value
   );
+
 
   const results =
     await getData(
@@ -1054,225 +1242,267 @@ async function performSearch(
       value
     );
 
+
   state.searchResults =
     results;
+
 
   const movieGrid =
     document.getElementById(
       "movieGrid"
     );
 
-  const ottGrid =
-    document.getElementById(
-      "ottGrid"
-    );
 
-  const seriesGrid =
-    document.getElementById(
-      "seriesGrid"
-    );
-
-  const upcomingGrid =
-    document.getElementById(
-      "upcomingGrid"
-    );
-
-  if (movieGrid) {
+  if(movieGrid){
 
     movieGrid.innerHTML =
       results.length
 
         ? results
-            .slice(0, 12)
+            .slice(0,12)
             .map(movieCard)
             .join("")
 
         : `
+
           <div class="empty-state">
+
             No results found for
             "${escapeHtml(value)}".
+
           </div>
+
         `;
+
   }
 
-  if (ottGrid) {
-    ottGrid.innerHTML = "";
-  }
 
-  if (seriesGrid) {
-    seriesGrid.innerHTML = "";
-  }
+  [
+    "ottGrid",
+    "seriesGrid",
+    "upcomingGrid"
+  ]
+    .forEach(id=>{
 
-  if (upcomingGrid) {
-    upcomingGrid.innerHTML = "";
-  }
+      const element =
+        document.getElementById(id);
+
+      if(element){
+
+        element.innerHTML = "";
+
+      }
+
+    });
+
 
   const heading =
     document.querySelector(
       "#movies .section-head h2"
     );
 
-  if (heading) {
+
+  if(heading){
+
     heading.textContent =
       `🔎 Search Results for "${value}"`;
+
   }
+
 
   const movieSection =
     document.getElementById(
       "movies"
     );
 
-  if (movieSection) {
+
+  if(movieSection){
+
     movieSection.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
+
+      behavior:"smooth",
+      block:"start"
+
     });
+
   }
+
 }
+
 
 /* =========================
    SEARCH UI
 ========================= */
 
-function setupSearch() {
+function setupSearch(){
 
   const searchBtn =
     document.getElementById(
       "searchBtn"
     );
 
+
   const searchBar =
     document.getElementById(
       "searchBar"
     );
+
 
   const searchInput =
     document.getElementById(
       "searchInput"
     );
 
+
   const clearSearch =
     document.getElementById(
       "clearSearch"
     );
 
-  if (
+
+  if(
     searchBtn &&
     searchBar
-  ) {
+  ){
 
     searchBtn.addEventListener(
       "click",
-      () => {
+      ()=>{
 
         searchBar.classList.toggle(
           "open"
         );
 
-        if (
+
+        if(
           searchBar.classList.contains(
             "open"
           ) &&
           searchInput
-        ) {
+        ){
+
           setTimeout(
-            () =>
-              searchInput.focus(),
+            ()=>searchInput.focus(),
             100
           );
+
         }
 
       }
     );
+
   }
 
-  if (searchInput) {
+
+  if(searchInput){
 
     let timer;
 
+
     searchInput.addEventListener(
       "input",
-      () => {
+      ()=>{
 
         clearTimeout(timer);
+
 
         const query =
           searchInput.value.trim();
 
-        if (!query) {
+
+        if(!query){
+
           loadHomepage();
+
           return;
+
         }
 
-        timer = setTimeout(
-          () => {
-            performSearch(query);
-          },
-          500
-        );
+
+        timer =
+          setTimeout(
+            ()=>{
+              performSearch(query);
+            },
+            500
+          );
 
       }
     );
 
+
     searchInput.addEventListener(
       "keydown",
-      event => {
+      event=>{
 
-        if (
+        if(
           event.key === "Enter"
-        ) {
+        ){
 
           event.preventDefault();
 
           performSearch(
             searchInput.value
           );
+
         }
 
       }
     );
+
   }
 
-  if (clearSearch) {
+
+  if(clearSearch){
 
     clearSearch.addEventListener(
       "click",
-      () => {
+      ()=>{
 
-        if (searchInput) {
+        if(searchInput){
+
           searchInput.value = "";
+
         }
 
         loadHomepage();
 
       }
     );
+
   }
+
 }
+
 
 /* =========================
    MOBILE MENU
 ========================= */
 
-function setupMobileMenu() {
+function setupMobileMenu(){
 
   const menuBtn =
     document.getElementById(
       "menuBtn"
     );
 
+
   const nav =
     document.getElementById(
       "mainNav"
     );
 
-  if (!menuBtn || !nav) {
+
+  if(!menuBtn || !nav){
+
     return;
+
   }
+
 
   menuBtn.addEventListener(
     "click",
-    () => {
+    ()=>{
 
       nav.classList.toggle(
         "open"
@@ -1281,13 +1511,14 @@ function setupMobileMenu() {
     }
   );
 
+
   nav
     .querySelectorAll("a")
-    .forEach(link => {
+    .forEach(link=>{
 
       link.addEventListener(
         "click",
-        () => {
+        ()=>{
 
           nav.classList.remove(
             "open"
@@ -1297,52 +1528,68 @@ function setupMobileMenu() {
       );
 
     });
+
 }
+
 
 /* =========================
    SUBSCRIBE
 ========================= */
 
-function setupSubscribe() {
+function setupSubscribe(){
 
   const form =
     document.getElementById(
       "subscribeForm"
     );
 
+
   const message =
     document.getElementById(
       "subscribeMsg"
     );
 
-  if (!form) {
+
+  if(!form){
+
     return;
+
   }
+
 
   form.addEventListener(
     "submit",
-    event => {
+    event=>{
 
       event.preventDefault();
+
 
       const input =
         form.querySelector(
           "input[type='email']"
         );
 
-      if (
+
+      if(
         !input ||
         !input.value.trim()
-      ) {
+      ){
+
         return;
+
       }
 
-      if (message) {
+
+      if(message){
+
         message.textContent =
           "Thanks! You're subscribed to FilmyRadarIndia.";
+
       }
 
+
       input.value = "";
+
 
       showToast(
         "Subscribed successfully 🔥"
@@ -1350,34 +1597,40 @@ function setupSubscribe() {
 
     }
   );
+
 }
+
 
 /* =========================
    TOAST
 ========================= */
 
-function showToast(
-  message
-) {
+function showToast(message){
 
   const toast =
     document.getElementById(
       "toast"
     );
 
-  if (!toast) {
+
+  if(!toast){
+
     return;
+
   }
+
 
   toast.textContent =
     message;
+
 
   toast.classList.add(
     "show"
   );
 
+
   setTimeout(
-    () => {
+    ()=>{
 
       toast.classList.remove(
         "show"
@@ -1386,77 +1639,107 @@ function showToast(
     },
     2500
   );
+
 }
 
+
 /* =========================
-   CATEGORY BUTTONS
+   CATEGORIES
 ========================= */
 
-function setupCategories() {
+function setupCategories(){
 
   const buttons =
     document.querySelectorAll(
       ".tags button"
     );
 
+
   buttons.forEach(
-    button => {
+    button=>{
 
       button.addEventListener(
         "click",
-        () => {
+        ()=>{
 
           const value =
             button.textContent.trim();
+
 
           const searchInput =
             document.getElementById(
               "searchInput"
             );
 
+
           const searchBar =
             document.getElementById(
               "searchBar"
             );
 
-          if (searchInput) {
+
+          if(searchInput){
+
             searchInput.value =
               value;
+
           }
 
-          if (searchBar) {
+
+          if(searchBar){
+
             searchBar.classList.add(
               "open"
             );
+
           }
+
 
           performSearch(
             value
           );
+
         }
       );
 
     }
   );
+
 }
+
 
 /* =========================
    VIEW ALL
 ========================= */
 
-function setupViewAll() {
+function setupViewAll(){
 
   document
     .querySelectorAll(
-      ".section-head a"
+      ".section-head > a"
     )
-    .forEach(link => {
+    .forEach(link=>{
 
       link.addEventListener(
         "click",
-        event => {
+        event=>{
+
+          const href =
+            link.getAttribute("href");
+
+
+          if(
+            href &&
+            href.startsWith("#")
+          ){
+
+            return;
+
+          }
+
 
           event.preventDefault();
+
 
           showToast(
             "More content coming soon 🎬"
@@ -1466,37 +1749,43 @@ function setupViewAll() {
       );
 
     });
+
 }
+
 
 /* =========================
    IMAGE FALLBACK
 ========================= */
 
-function setupImageFallbacks() {
+function setupImageFallbacks(){
 
   document.addEventListener(
     "error",
-    event => {
+    event=>{
 
       const element =
         event.target;
 
-      if (
+
+      if(
         element.tagName === "IMG" &&
         !element.dataset.fallback
-      ) {
+      ){
 
         element.dataset.fallback =
           "true";
 
         element.src =
           FALLBACK_IMAGE;
+
       }
 
     },
     true
   );
+
 }
+
 
 /* =========================
    INIT
@@ -1504,11 +1793,12 @@ function setupImageFallbacks() {
 
 document.addEventListener(
   "DOMContentLoaded",
-  () => {
+  ()=>{
 
     console.log(
       "🚀 FilmyRadarIndia JS started 🔥"
     );
+
 
     setupSearch();
 
